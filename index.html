@@ -41,8 +41,8 @@
   <script>
     const particlesContainer = document.getElementById('particles');
     const colors = ['#FFD700', '#FFB6C1', '#ADD8E6', '#FFFF99', '#FF69B4', '#FFFF00'];
-    const numParticles = 180;
-    const maxTrailLength = 7; 
+    const numParticles = 64;
+    const maxTrailLength = 5; 
 
     function createParticle(x, y, color, opacity) {
       const particle = document.createElement('div');
@@ -97,7 +97,7 @@
             p.style.opacity = trailOpacity;
           });
 
-          vy += 0.1;
+          vy += 0.2;
 
           requestAnimationFrame(animate);
         };
@@ -110,7 +110,7 @@
         const randomX = Math.random() * window.innerWidth;
         const randomY = Math.random() * window.innerHeight;
         explode(randomX, randomY);
-      }, 1450); 
+      }, 1650); 
     }
 
     const randomX = Math.random() * window.innerWidth;
