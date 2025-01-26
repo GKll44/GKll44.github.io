@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GKll44的主页</title>
+  <title>GKll44主页</title>
   <link rel="icon" href="/1.png" type="image/png">
   <style>
     body {
       margin: 0;
-      overflow: hidden;
+      overflow: auto; 
       background-color: #000;
-      height: 100vh;
+      min-height: 700px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
       color: #fff;
       font-family: Arial, sans-serif;
     }
     h1 {
-      color: #ffffff;
+      color: #FFFFFF;
       margin-bottom: 20px;
+      z-index: 10;
     }
     .particle {
       position: absolute;
@@ -29,20 +30,104 @@
       background-color: white;
       border-radius: 0;
       opacity: 0;
+      z-index: 1;
+    }
+    .component-background {
+      width: 200px;
+      height: 200px;
+      background-color: rgba(255, 255, 255, 0.692);
+      backdrop-filter: blur(6px);
+      border-radius: 10px;
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      color: #616161;
+      font-size: 24px;
+      font-weight: bold;
+      z-index: 5; 
+      padding: 20px;
+      box-sizing: border-box; 
+      background-clip: padding-box; /* 仅对 padding 区域应用背景 */
+    }
+    
+    .clock {
+      font-family: 'Trebuchet MS', serif;
+      font-size: 48px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .clock-time {
+      font-size: 64px;
+    }
+    .clock-minute {
+      font-size: 64px;
+      position: relative;
+    }
+    .clock-am-pm {
+      font-size: 16px;
+      position: relative;
+      bottom: 29px;
+      right: -50px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      font-weight: bolder;
+      background-color: #0065fc;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
   <h1>欢迎来到GKll44的主页！</h1>
-  <div class="description">
-    <p>这里也没什么可以说的，所以这里很空荡是正确的……</p>
+  <div class="component-background">
+    <div class="clock">
+      <div class="clock-time" id="clock-time">00</div>
+      <div class="clock-minute" id="clock-minute">00</div>
+      <div class="clock-am-pm" id="clock-am-pm">AM</div>
+    </div>
   </div>
   <div id="particles"></div>
   <script>
+    const clockTimeElement = document.getElementById('clock-time');
+    const clockMinuteElement = document.getElementById('clock-minute');
+    const clockAmPmElement = document.getElementById('clock-am-pm');
+
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const amPm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = String(hours % 12 || 12).padStart(2, '0');
+
+      clockTimeElement.textContent = displayHours;
+      clockMinuteElement.textContent = minutes;
+      clockAmPmElement.textContent = amPm;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
     const particlesContainer = document.getElementById('particles');
     const colors = ['#FFD700', '#FFB6C1', '#ADD8E6', '#FFFF99', '#FF69B4', '#FFFF00'];
-    const numParticles = 64;
-    const maxTrailLength = 5; 
+    const numParticles = 50;
+    const maxTrailLength = 10;
 
     function createParticle(x, y, color, opacity) {
       const particle = document.createElement('div');
@@ -70,7 +155,7 @@
         const speed = Math.random() * 5 + 2;
         const dx = Math.cos(angle) * speed;
         const dy = Math.sin(angle) * speed;
-        let vy = dy; 
+        let vy = dy;
         let trail = [];
 
         const animate = () => {
@@ -97,7 +182,8 @@
             p.style.opacity = trailOpacity;
           });
 
-          vy += 0.2;
+
+          vy += 0.1;
 
           requestAnimationFrame(animate);
         };
@@ -105,12 +191,11 @@
         requestAnimationFrame(animate);
       });
 
-
       setTimeout(() => {
         const randomX = Math.random() * window.innerWidth;
         const randomY = Math.random() * window.innerHeight;
         explode(randomX, randomY);
-      }, 1650); 
+      }, 1450); 
     }
 
     const randomX = Math.random() * window.innerWidth;
