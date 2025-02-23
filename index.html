@@ -9,7 +9,6 @@
     body {
       margin: 0;
       overflow: auto; 
-      background-color: #000;
       min-height: 700px;
       display: flex;
       flex-direction: column;
@@ -17,20 +16,22 @@
       align-items: center;
       color: #fff;
       font-family: Arial, sans-serif;
+      transition: background 1s ease;
     }
     h1 {
       color: #FFFFFF;
       margin-bottom: 20px;
       z-index: 10;
     }
-    .particle {
+    .star {
       position: absolute;
-      width: 5px;
-      height: 5px;
+      width: 2px;
+      height: 2px;
       background-color: white;
-      border-radius: 0;
+      border-radius: 50%;
       opacity: 0;
       z-index: 1;
+      animation: twinkle 2s infinite;
     }
     .component-background {
       width: 200px;
@@ -83,7 +84,7 @@
       cursor: pointer;
       z-index: 10;
     }
-    #particles {
+    #stars {
       position: fixed;
       top: 0;
       left: 0;
@@ -91,6 +92,21 @@
       height: 100%;
       pointer-events: none;
       z-index: 1;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    /* 白天背景 */
+    .day-sky {
+      background: linear-gradient(to bottom, #87CEEB, #B0E2FF);
+    }
+
+    /* 黑夜背景 */
+    .night-sky {
+      background: linear-gradient(to bottom, #000033, #000066);
     }
   </style>
 </head>
@@ -103,11 +119,14 @@
       <div class="clock-am-pm" id="clock-am-pm">AM</div>
     </div>
   </div>
-  <div id="particles"></div>
+  <div id="stars"></div>
   <script>
     const clockTimeElement = document.getElementById('clock-time');
     const clockMinuteElement = document.getElementById('clock-minute');
     const clockAmPmElement = document.getElementById('clock-am-pm');
+    const bodyElement = document.body;
+    const starsContainer = document.getElementById('stars');
+    const numStars = 200;
 
     function updateClock() {
       const now = new Date();
@@ -119,88 +138,34 @@
       clockTimeElement.textContent = displayHours;
       clockMinuteElement.textContent = minutes;
       clockAmPmElement.textContent = amPm;
+
+      // 根据时间切换背景
+      if (hours >= 6 && hours < 18) {
+        bodyElement.classList.remove('night-sky');
+        bodyElement.classList.add('day-sky');
+        starsContainer.style.display = 'none'; // 白天隐藏星星
+      } else {
+        bodyElement.classList.remove('day-sky');
+        bodyElement.classList.add('night-sky');
+        starsContainer.style.display = 'block'; // 黑夜显示星星
+      }
     }
 
     setInterval(updateClock, 1000);
     updateClock();
 
-    const particlesContainer = document.getElementById('particles');
-    const colors = ['#FFD700', '#FFB6C1', '#ADD8E6', '#FFFF99', '#FF69B4', '#FFFF00'];
-    const numParticles = 50;
-    const maxTrailLength = 10;
-
-    function createParticle(x, y, color, opacity) {
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
-      particle.style.backgroundColor = color;
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-      particle.style.opacity = opacity;
-      particlesContainer.appendChild(particle);
-      return particle;
+    function createStar() {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = `${Math.random() * window.innerWidth}px`;
+      star.style.top = `${Math.random() * window.innerHeight}px`;
+      star.style.animationDuration = `${Math.random() * 2 + 1}s`;
+      starsContainer.appendChild(star);
     }
 
-    function explode(x, y) {
-      const particles = [];
-      for (let i = 0; i < numParticles; i++) {
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particles.push(createParticle(x, y, color, 1));
-      }
-      animateParticles(particles);
+    for (let i = 0; i < numStars; i++) {
+      createStar();
     }
-
-    function animateParticles(particles) {
-      particles.forEach(particle => {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 2;
-        const dx = Math.cos(angle) * speed;
-        const dy = Math.sin(angle) * speed;
-        let vy = dy;
-        let trail = [];
-
-        const animate = () => {
-          const currentX = parseFloat(particle.style.left) + dx;
-          const currentY = parseFloat(particle.style.top) + vy;
-
-          if (currentX < 0 || currentX > window.innerWidth || currentY > window.innerHeight) {
-            particlesContainer.removeChild(particle);
-            trail.forEach(p => particlesContainer.removeChild(p));
-            return;
-          }
-
-          particle.style.left = `${currentX}px`;
-          particle.style.top = `${currentY}px`;
-
-          const newTrailParticle = createParticle(currentX, currentY, particle.style.backgroundColor, 0);
-          trail.push(newTrailParticle);
-          if (trail.length > maxTrailLength) {
-            particlesContainer.removeChild(trail.shift());
-          }
-
-          trail.forEach((p, index) => {
-            const trailOpacity = index / maxTrailLength;
-            p.style.opacity = trailOpacity;
-          });
-
-
-          vy += 0.1;
-
-          requestAnimationFrame(animate);
-        };
-
-        requestAnimationFrame(animate);
-      });
-
-      setTimeout(() => {
-        const randomX = Math.random() * window.innerWidth;
-        const randomY = Math.random() * window.innerHeight;
-        explode(randomX, randomY);
-      }, 1450); 
-    }
-
-    const randomX = Math.random() * window.innerWidth;
-    const randomY = Math.random() * window.innerHeight;
-    explode(randomX, randomY);
   </script>
 </body>
 </html>
