@@ -16,7 +16,7 @@
       align-items: center;
       color: #fff;
       font-family: Arial, sans-serif;
-      transition: background 1s ease;
+      transition: background 10s ease; /* 更慢的过渡效果 */
     }
     h1 {
       color: #FFFFFF;
@@ -104,6 +104,11 @@
       background: linear-gradient(to bottom, #87CEEB, #B0E2FF);
     }
 
+    /* 夕阳背景 */
+    .sunset-sky {
+      background: linear-gradient(to bottom, #FF4500, #FF8C00, #FFD700);
+    }
+
     /* 黑夜背景 */
     .night-sky {
       background: linear-gradient(to bottom, #000033, #000066);
@@ -140,12 +145,16 @@
       clockAmPmElement.textContent = amPm;
 
       // 根据时间切换背景
-      if (hours >= 6 && hours < 18) {
-        bodyElement.classList.remove('night-sky');
+      if (hours >= 6 && hours < 17) {
+        bodyElement.classList.remove('night-sky', 'sunset-sky');
         bodyElement.classList.add('day-sky');
         starsContainer.style.display = 'none'; // 白天隐藏星星
+      } else if (hours >= 17 && hours < 19) {
+        bodyElement.classList.remove('day-sky', 'night-sky');
+        bodyElement.classList.add('sunset-sky');
+        starsContainer.style.display = 'none'; // 夕阳时隐藏星星
       } else {
-        bodyElement.classList.remove('day-sky');
+        bodyElement.classList.remove('day-sky', 'sunset-sky');
         bodyElement.classList.add('night-sky');
         starsContainer.style.display = 'block'; // 黑夜显示星星
       }
