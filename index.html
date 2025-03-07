@@ -179,9 +179,14 @@
     // 监听页面可见性变化
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
+        // 离开页面时更改标题
         document.title = "ヾ(￣▽￣)Bye~Bye~";
       } else {
-        document.title = "GKll44主页";
+        // 返回页面时更改标题为“又见面了(❁´◡`❁)”，1秒后恢复
+        document.title = "又见面了(❁´◡`❁)";
+        setTimeout(() => {
+          document.title = "GKll44主页";
+        }, 1000); // 1秒后恢复标题
       }
     });
   </script>
