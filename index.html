@@ -175,6 +175,15 @@
     for (let i = 0; i < numStars; i++) {
       createStar();
     }
+
+    // 监听页面可见性变化
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = "ヾ(￣▽￣)Bye~Bye~";
+      } else {
+        document.title = "GKll44主页";
+      }
+    });
   </script>
 </body>
 </html>
