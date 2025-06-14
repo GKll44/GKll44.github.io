@@ -195,45 +195,19 @@
       height: 80px;
       background: linear-gradient(to bottom, white, transparent);
       opacity: 0.8;
-      transform: rotate(-45deg);
+      transform: rotate(225deg);
       animation: meteorFall 2s linear infinite;
     }
 
     @keyframes meteorFall {
       0% {
-        transform: translateY(-100px) translateX(100px) rotate(-45deg);
+        transform: translateY(-100px) translateX(100px) rotate(225deg);
         opacity: 1;
       }
       100% {
-        transform: translateY(800px) translateX(-800px) rotate(-45deg);
+        transform: translateY(800px) translateX(-800px) rotate(225deg);
         opacity: 0;
       }
-    }
-
-    /* 云彩样式 */
-    .cloud {
-      position: absolute;
-      width: 200px;
-      height: 100px;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1));
-      border-radius: 50%;
-      filter: blur(5px); /* 降低模糊程度 */
-      animation: cloudMove 30s linear infinite;
-      opacity: 1;
-      z-index: 5; /* 增加 z-index 提升显示层级 */
-    }
-
-    .cloud.sunset {
-      background: linear-gradient(to bottom, rgba(255, 140, 0, 1), rgba(255, 69, 0, 1));
-    }
-
-    .cloud.night {
-      background: linear-gradient(to bottom, rgba(0, 0, 51, 1), rgba(0, 0, 102, 1));
-    }
-
-    @keyframes cloudMove {
-      0% { transform: translateX(-200px); }
-      100% { transform: translateX(100vw); }
     }
   </style>
 </head>
@@ -248,7 +222,6 @@
   </div>
   <div id="stars"></div>
   <div id="aurora"></div> <!-- 极光效果容器 -->
-  <div id="clouds"></div>
   <script>
     const clockTimeElement = document.getElementById('clock-time');
     const clockMinuteElement = document.getElementById('clock-minute');
@@ -256,38 +229,14 @@
     const bodyElement = document.body;
     const starsContainer = document.getElementById('stars');
     const auroraContainer = document.getElementById('aurora');
-    const cloudsContainer = document.getElementById('clouds');
     const numStars = 200;
     const numMeteors = 10;
-    const numClouds = 10;
 
     // 创建极光带
     function createAurora() {
-      auroraContainer.innerHTML = ''; // 清理旧的极光
-      const numBands = 5; // 增加极光带数量
-      for (let i = 0; i < numBands; i++) {
+      for (let i = 0; i < 3; i++) {
         const band = document.createElement('div');
         band.className = 'aurora-band';
-        // 随机设置位置、旋转、模糊和动画时长
-        const topPos = Math.random() * 80; // 0% ~ 80%
-        band.style.top = `${topPos}%`;
-        const rotation = (Math.random() * 10 - 5).toFixed(1); // -5deg ~ 5deg
-        band.style.transform = `rotate(${rotation}deg)`;
-        const blur = Math.floor(Math.random() * 20) + 30; // 30px ~ 50px
-        band.style.filter = `blur(${blur}px)`;
-        const duration = Math.random() * 10 + 15; // 15s ~ 25s
-        band.style.animationDuration = `${duration}s`;
-        // 随机选择渐变背景
-        const gradients = [
-          'linear-gradient(90deg, rgba(0, 255, 0, 0.15), rgba(0, 200, 255, 0.15))',
-          'linear-gradient(90deg, rgba(100, 0, 255, 0.15), rgba(200, 0, 255, 0.15))',
-          'linear-gradient(90deg, rgba(0, 255, 200, 0.15), rgba(0, 150, 255, 0.15))'
-        ];
-        const gradient = gradients[Math.floor(Math.random() * gradients.length)];
-        band.style.background = gradient;
-        if (Math.random() < 0.5) {
-          band.style.animationDirection = 'reverse';
-        }
         auroraContainer.appendChild(band);
       }
     }
@@ -389,9 +338,6 @@
       // 更新背景（平滑过渡）
       updateBackground(hours, now.getMinutes());
       
-      // 更新云彩
-      updateClouds(hours);
-
       // 控制星星和极光显示
       if (hours >= 20 || hours < 6) {
         // 黑夜：显示星星和极光
@@ -433,7 +379,7 @@
       const meteor = document.createElement('div');
       meteor.classList.add('meteor');
       meteor.style.left = `${Math.random() * window.innerWidth}px`;
-      meteor.style.top = `${Math.random() * window.innerHeight}px`;
+      meteor.style.top = `${-Math.random() * 100}px`; // 从屏幕顶部生成
       meteor.style.animationDuration = `${Math.random() * 2 + 1}s`;
       starsContainer.appendChild(meteor);
 
@@ -470,33 +416,6 @@
       const now = new Date();
       updateBackground(now.getHours(), now.getMinutes());
     });
-
-    function createCloud(type) {
-      const cloud = document.createElement('div');
-      cloud.classList.add('cloud', type);
-      cloud.style.top = `${Math.random() * window.innerHeight * 0.5}px`;
-      cloud.style.left = `${Math.random() * window.innerWidth}px`;
-      cloud.style.animationDuration = `${Math.random() * 20 + 20}s`;
-      cloudsContainer.appendChild(cloud);
-    }
-
-    function updateClouds(hours) {
-      cloudsContainer.innerHTML = ''; // 清空云彩
-      if (hours >= 17 && hours < 20) {
-        // 黄昏：云彩
-        for (let i = 0; i < numClouds; i++) {
-          createCloud('sunset');
-        }
-      } else if (hours >= 20 || hours < 6) {
-        // 黑夜：深色云彩
-        for (let i = 0; i < numClouds; i++) {
-          createCloud('night');
-        }
-      } else {
-        // 白天：隐藏云彩
-        cloudsContainer.innerHTML = '';
-      }
-    }
   </script>
 </body>
 </html>
