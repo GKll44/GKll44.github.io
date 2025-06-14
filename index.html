@@ -6,6 +6,12 @@
   <title>GKll44主页</title>
   <link rel="icon" href="/1.png" type="image/png">
   <style>
+    html, body {
+      height: 100%; /* 确保背景覆盖整个窗口 */
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       margin: 0;
       overflow: auto; 
@@ -17,6 +23,8 @@
       color: #fff;
       font-family: Arial, sans-serif;
       transition: background 10s ease; /* 更慢的过渡效果 */
+      background-size: cover; /* 背景适应窗口 */
+      background-attachment: fixed; /* 防止滚动时背景移动 */
     }
     h1 {
       color: #FFFFFF;
@@ -94,6 +102,60 @@
       z-index: 1;
     }
 
+    /* 极光效果 */
+    #aurora {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 2s ease;
+      overflow: hidden;
+    }
+    
+    .aurora-band {
+      position: absolute;
+      width: 150%;
+      height: 30%;
+      background: linear-gradient(90deg, 
+        rgba(0, 255, 0, 0.1), 
+        rgba(0, 200, 255, 0.1), 
+        rgba(0, 100, 255, 0.1));
+      border-radius: 50% 50%;
+      filter: blur(30px);
+      transform: rotate(-3deg);
+      top: 10%;
+      animation: auroraMove 15s infinite linear;
+    }
+    
+    .aurora-band:nth-child(2) {
+      top: 40%;
+      background: linear-gradient(90deg, 
+        rgba(100, 0, 255, 0.1), 
+        rgba(200, 0, 255, 0.1), 
+        rgba(0, 100, 255, 0.1));
+      animation: auroraMove 20s infinite linear reverse;
+      filter: blur(40px);
+    }
+    
+    .aurora-band:nth-child(3) {
+      top: 70%;
+      background: linear-gradient(90deg, 
+        rgba(0, 255, 200, 0.1), 
+        rgba(0, 150, 255, 0.1), 
+        rgba(100, 0, 255, 0.1));
+      animation: auroraMove 25s infinite linear;
+      filter: blur(35px);
+    }
+    
+    @keyframes auroraMove {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
     @keyframes twinkle {
       0%, 100% { opacity: 0; }
       50% { opacity: 1; }
@@ -113,6 +175,66 @@
     .night-sky {
       background: linear-gradient(to bottom, #000033, #000066);
     }
+    
+    /* 过渡背景类 */
+    .sunset-to-night {
+      background: linear-gradient(to bottom, #FF8C00, #000066);
+    }
+    
+    .night-to-sunset {
+      background: linear-gradient(to bottom, #000066, #FF8C00);
+    }
+    
+    .day-to-sunset {
+      background: linear-gradient(to bottom, #B0E2FF, #FFD700);
+    }
+
+    .meteor {
+      position: absolute;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom, white, transparent);
+      opacity: 0.8;
+      transform: rotate(-45deg);
+      animation: meteorFall 2s linear infinite;
+    }
+
+    @keyframes meteorFall {
+      0% {
+        transform: translateY(-100px) translateX(100px) rotate(-45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(800px) translateX(-800px) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    /* 云彩样式 */
+    .cloud {
+      position: absolute;
+      width: 200px;
+      height: 100px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1));
+      border-radius: 50%;
+      filter: blur(5px); /* 降低模糊程度 */
+      animation: cloudMove 30s linear infinite;
+      opacity: 1;
+      z-index: 5; /* 增加 z-index 提升显示层级 */
+    }
+
+    .cloud.sunset {
+      background: linear-gradient(to bottom, rgba(255, 140, 0, 1), rgba(255, 69, 0, 1));
+    }
+
+    .cloud.night {
+      background: linear-gradient(to bottom, rgba(0, 0, 51, 1), rgba(0, 0, 102, 1));
+    }
+
+    @keyframes cloudMove {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(100vw); }
+    }
   </style>
 </head>
 <body>
@@ -125,13 +247,133 @@
     </div>
   </div>
   <div id="stars"></div>
+  <div id="aurora"></div> <!-- 极光效果容器 -->
+  <div id="clouds"></div>
   <script>
     const clockTimeElement = document.getElementById('clock-time');
     const clockMinuteElement = document.getElementById('clock-minute');
     const clockAmPmElement = document.getElementById('clock-am-pm');
     const bodyElement = document.body;
     const starsContainer = document.getElementById('stars');
+    const auroraContainer = document.getElementById('aurora');
+    const cloudsContainer = document.getElementById('clouds');
     const numStars = 200;
+    const numMeteors = 10;
+    const numClouds = 10;
+
+    // 创建极光带
+    function createAurora() {
+      auroraContainer.innerHTML = ''; // 清理旧的极光
+      const numBands = 5; // 增加极光带数量
+      for (let i = 0; i < numBands; i++) {
+        const band = document.createElement('div');
+        band.className = 'aurora-band';
+        // 随机设置位置、旋转、模糊和动画时长
+        const topPos = Math.random() * 80; // 0% ~ 80%
+        band.style.top = `${topPos}%`;
+        const rotation = (Math.random() * 10 - 5).toFixed(1); // -5deg ~ 5deg
+        band.style.transform = `rotate(${rotation}deg)`;
+        const blur = Math.floor(Math.random() * 20) + 30; // 30px ~ 50px
+        band.style.filter = `blur(${blur}px)`;
+        const duration = Math.random() * 10 + 15; // 15s ~ 25s
+        band.style.animationDuration = `${duration}s`;
+        // 随机选择渐变背景
+        const gradients = [
+          'linear-gradient(90deg, rgba(0, 255, 0, 0.15), rgba(0, 200, 255, 0.15))',
+          'linear-gradient(90deg, rgba(100, 0, 255, 0.15), rgba(200, 0, 255, 0.15))',
+          'linear-gradient(90deg, rgba(0, 255, 200, 0.15), rgba(0, 150, 255, 0.15))'
+        ];
+        const gradient = gradients[Math.floor(Math.random() * gradients.length)];
+        band.style.background = gradient;
+        if (Math.random() < 0.5) {
+          band.style.animationDirection = 'reverse';
+        }
+        auroraContainer.appendChild(band);
+      }
+    }
+
+    // 颜色插值函数
+    function interpolateColor(color1, color2, factor) {
+      const result = color1.slice();
+      for (let i = 0; i < 3; i++) {
+        result[i] = Math.round(result[i] + factor * (color2[i] - result[i]));
+      }
+      return result;
+    }
+
+    // RGB数组转CSS颜色
+    function rgbToCss(rgbArray) {
+      return `rgb(${rgbArray[0]}, ${rgbArray[1]}, ${rgbArray[2]})`;
+    }
+
+    // 十六进制转RGB数组
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16)
+      ] : [0, 0, 0];
+    }
+
+    // 平滑过渡背景
+    function updateBackground(hours, minutes) {
+      // 定义颜色 (RGB格式)
+      const dayTop = hexToRgb('#87CEEB');
+      const dayBottom = hexToRgb('#B0E2FF');
+      const sunsetTop = hexToRgb('#FF4500');
+      const sunsetMiddle = hexToRgb('#FF8C00');
+      const sunsetBottom = hexToRgb('#FFD700');
+      const nightTop = hexToRgb('#000033');
+      const nightBottom = hexToRgb('#000066');
+
+      // 计算当前时间的分钟表示
+      const totalMinutes = hours * 60 + minutes;
+      
+      // 过渡时间段定义 (以分钟为单位)
+      const dawnStart = 4 * 60;    // 4:00
+      const dawnEnd = 6 * 60;      // 6:00
+      const sunsetStart = 17 * 60; // 17:00
+      const sunsetEnd = 19 * 60;   // 19:00
+      const nightStart = 20 * 60;  // 20:00
+      
+      // 根据时间段设置背景
+      if (totalMinutes >= dawnStart && totalMinutes < dawnEnd) {
+        // 黎明过渡 (黑夜 -> 白天)
+        const factor = (totalMinutes - dawnStart) / (dawnEnd - dawnStart);
+        const top = interpolateColor(nightTop, dayTop, factor);
+        const bottom = interpolateColor(nightBottom, dayBottom, factor);
+        bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
+      } 
+      else if (totalMinutes >= sunsetStart && totalMinutes < sunsetEnd) {
+        // 黄昏过渡 (白天 -> 夕阳 -> 黑夜)
+        const factor = (totalMinutes - sunsetStart) / (sunsetEnd - sunsetStart);
+        
+        if (factor < 0.5) {
+          // 前半段: 白天 -> 夕阳
+          const subFactor = factor * 2;
+          const top = interpolateColor(dayTop, sunsetTop, subFactor);
+          const bottom = interpolateColor(dayBottom, sunsetBottom, subFactor);
+          bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
+        } else {
+          // 后半段: 夕阳 -> 黑夜
+          const subFactor = (factor - 0.5) * 2;
+          const top = interpolateColor(sunsetTop, nightTop, subFactor);
+          const bottom = interpolateColor(sunsetBottom, nightBottom, subFactor);
+          bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
+        }
+      }
+      else if (totalMinutes >= nightStart || totalMinutes < dawnStart) {
+        // 黑夜
+        bodyElement.classList.remove('day-sky', 'sunset-sky');
+        bodyElement.classList.add('night-sky');
+      }
+      else {
+        // 白天
+        bodyElement.classList.remove('night-sky', 'sunset-sky');
+        bodyElement.classList.add('day-sky');
+      }
+    }
 
     function updateClock() {
       const now = new Date();
@@ -144,19 +386,27 @@
       clockMinuteElement.textContent = minutes;
       clockAmPmElement.textContent = amPm;
 
-      // 根据时间切换背景
-      if (hours >= 6 && hours < 17) {
-        bodyElement.classList.remove('night-sky', 'sunset-sky');
-        bodyElement.classList.add('day-sky');
-        starsContainer.style.display = 'none'; // 白天隐藏星星
-      } else if (hours >= 17 && hours < 19) {
-        bodyElement.classList.remove('day-sky', 'night-sky');
-        bodyElement.classList.add('sunset-sky');
-        starsContainer.style.display = 'none'; // 夕阳时隐藏星星
-      } else {
-        bodyElement.classList.remove('day-sky', 'sunset-sky');
-        bodyElement.classList.add('night-sky');
-        starsContainer.style.display = 'block'; // 黑夜显示星星
+      // 更新背景（平滑过渡）
+      updateBackground(hours, now.getMinutes());
+      
+      // 更新云彩
+      updateClouds(hours);
+
+      // 控制星星和极光显示
+      if (hours >= 20 || hours < 6) {
+        // 黑夜：显示星星和极光
+        starsContainer.style.display = 'block';
+        auroraContainer.style.opacity = '0.7';
+      } else if (hours >= 17 && hours < 20) {
+        // 黄昏：逐渐显示星星和极光
+        const sunsetProgress = (hours - 17) + (now.getMinutes() / 60);
+        const opacity = Math.min(0.7, sunsetProgress / 3 * 0.7);
+        starsContainer.style.display = 'block';
+        auroraContainer.style.opacity = opacity.toString();
+      } else if (hours >= 6 && hours < 17) {
+        // 白天：隐藏星星和极光
+        starsContainer.style.display = 'none';
+        auroraContainer.style.opacity = '0';
       }
     }
 
@@ -176,19 +426,77 @@
       createStar();
     }
 
+    // 创建极光
+    createAurora();
+
+    function createMeteor() {
+      const meteor = document.createElement('div');
+      meteor.classList.add('meteor');
+      meteor.style.left = `${Math.random() * window.innerWidth}px`;
+      meteor.style.top = `${Math.random() * window.innerHeight}px`;
+      meteor.style.animationDuration = `${Math.random() * 2 + 1}s`;
+      starsContainer.appendChild(meteor);
+
+      // 自动移除流星以防止累积
+      setTimeout(() => {
+        meteor.remove();
+      }, 2000);
+    }
+
+    function generateMeteors() {
+      setInterval(() => {
+        createMeteor();
+      }, 500); // 每0.5秒生成一个流星
+    }
+
+    generateMeteors();
+
     // 监听页面可见性变化
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
         // 离开标签页时更改标题
         document.title = "ヾ(￣▽￣)Bye~Bye~";
       } else {
-        // 再次进入时更改标题为“又见面了(❁´◡`❁)”，持续1秒
+        // 再次进入时更改标题为"又见面了(❁´◡`❁)"，持续1秒
         document.title = "又见面了哦(❁´◡`❁)";
         setTimeout(() => {
           document.title = "GKll44主页";
         }, 1000); // 1秒后恢复标题
       }
     });
+
+    // 在窗口大小变化时重新计算背景
+    window.addEventListener('resize', () => {
+      const now = new Date();
+      updateBackground(now.getHours(), now.getMinutes());
+    });
+
+    function createCloud(type) {
+      const cloud = document.createElement('div');
+      cloud.classList.add('cloud', type);
+      cloud.style.top = `${Math.random() * window.innerHeight * 0.5}px`;
+      cloud.style.left = `${Math.random() * window.innerWidth}px`;
+      cloud.style.animationDuration = `${Math.random() * 20 + 20}s`;
+      cloudsContainer.appendChild(cloud);
+    }
+
+    function updateClouds(hours) {
+      cloudsContainer.innerHTML = ''; // 清空云彩
+      if (hours >= 17 && hours < 20) {
+        // 黄昏：云彩
+        for (let i = 0; i < numClouds; i++) {
+          createCloud('sunset');
+        }
+      } else if (hours >= 20 || hours < 6) {
+        // 黑夜：深色云彩
+        for (let i = 0; i < numClouds; i++) {
+          createCloud('night');
+        }
+      } else {
+        // 白天：隐藏云彩
+        cloudsContainer.innerHTML = '';
+      }
+    }
   </script>
 </body>
 </html>
