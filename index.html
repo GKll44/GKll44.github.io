@@ -7,7 +7,7 @@
   <link rel="icon" href="/1.png" type="image/png">
   <style>
     html, body {
-      height: 100%; /* 确保背景覆盖整个窗口 */
+      height: 100%;
       margin: 0;
       padding: 0;
     }
@@ -22,12 +22,12 @@
       align-items: center;
       color: #fff;
       font-family: Arial, sans-serif;
-      transition: background 10s ease; /* 更慢的过渡效果 */
-      background-size: cover; /* 背景适应窗口 */
-      background-attachment: fixed; /* 防止滚动时背景移动 */
+      transition: background 10s ease;
+      background-size: cover;
+      background-attachment: fixed;
     }
     
-    /* 添加打字效果样式 */
+    /* 打字效果样式 */
     .typing-container {
       cursor: pointer;
       margin-bottom: 20px;
@@ -99,16 +99,6 @@
       }
     }
 
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background-color: white;
-      border-radius: 50%;
-      opacity: 0;
-      z-index: 1;
-      animation: twinkle 2s infinite;
-    }
     .component-background {
       width: 200px;
       height: 200px;
@@ -148,85 +138,63 @@
       bottom: 29px;
       right: -50px;
     }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
+
+    /* 指路区域样式 */
+    .guide-section {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+    }
+
+    .guide-title {
+      font-size: 28px;
+      font-weight: bold;
       color: #fff;
-      font-weight: bolder;
-      background-color: #0065fc;
-      border: none;
-      border-radius: 5px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px rgba(0,0,0,0.3);
+      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+    }
+
+    .guide-panel {
+      width: 280px;
+      min-height: 150px;
+      background-color: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(6px);
+      border-style:double;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .guide-item {
+      width: 100%;
+      padding: 12px 0px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      text-decoration: none;
+      color: #f8f8f8;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
       cursor: pointer;
-      z-index: 10;
-    }
-    #stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
     }
 
-    /* 极光效果 */
-    #aurora {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 2s ease;
-      overflow: hidden;
-    }
-    
-    .aurora-band {
-      position: absolute;
-      width: 150%;
-      height: 30%;
-      background: linear-gradient(90deg, 
-        rgba(0, 255, 0, 0.1), 
-        rgba(0, 200, 255, 0.1), 
-        rgba(0, 100, 255, 0.1));
-      border-radius: 50% 50%;
-      filter: blur(30px);
-      transform: rotate(-3deg);
-      top: 10%;
-      animation: auroraMove 15s infinite linear;
-    }
-    
-    .aurora-band:nth-child(2) {
-      top: 40%;
-      background: linear-gradient(90deg, 
-        rgba(100, 0, 255, 0.1), 
-        rgba(200, 0, 255, 0.1), 
-        rgba(0, 100, 255, 0.1));
-      animation: auroraMove 20s infinite linear reverse;
-      filter: blur(40px);
-    }
-    
-    .aurora-band:nth-child(3) {
-      top: 70%;
-      background: linear-gradient(90deg, 
-        rgba(0, 255, 200, 0.1), 
-        rgba(0, 150, 255, 0.1), 
-        rgba(100, 0, 255, 0.1));
-      animation: auroraMove 25s infinite linear;
-      filter: blur(35px);
-    }
-    
-    @keyframes auroraMove {
-      0% { left: -100%; }
-      100% { left: 100%; }
+    .guide-item:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      transform: translateX(5px);
     }
 
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
+    .guide-arrow {
+      color: #0065fc;
+      font-size: 20px;
+      margin-left: 10px;
     }
 
     /* 白天背景 */
@@ -256,133 +224,18 @@
     .day-to-sunset {
       background: linear-gradient(to bottom, #B0E2FF, #FFD700);
     }
-
-    .meteor {
-      position: absolute;
-      width: 2px;
-      height: 80px;
-      background: linear-gradient(to bottom, white, transparent);
-      opacity: 0.8;
-      transform: rotate(225deg);
-      animation: meteorFall 2s linear infinite;
-    }
-
-    @keyframes meteorFall {
-      0% {
-        transform: translateY(-100px) translateX(100px) rotate(225deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(800px) translateX(-800px) rotate(225deg);
-        opacity: 0;
-      }
-    }
-
-    /* 满月效果 */
-    .moon {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background: radial-gradient(circle at 30% 30%, #fff 0%, #f5f5f5 50%, #ddd 100%);
-      border-radius: 50%;
-      box-shadow: 0 0 20px #fff, 0 0 40px rgba(255, 255, 255, 0.5);
-      z-index: 10;
-      display: none;
-    }
-
-    /* 烟花效果 */
-    .firework {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      box-shadow: 0 0 10px 2px;
-      animation: firework-explode 1s ease-out forwards;
-      z-index: 20;
-    }
-
-    @keyframes firework-explode {
-      0% {
-        transform: translate(var(--x), var(--y)) scale(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--x), var(--y)) scale(1);
-        opacity: 0;
-      }
-    }
-
-    /* 代码雨效果 */
-    .code-rain {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .code-char {
-      position: absolute;
-      color: rgb(255, 255, 255);
-      font-family: monospace;
-      font-size: 16px;
-      opacity: 0.8;
-      text-shadow: 0 0 5px #0f0;
-      animation: code-fall linear forwards;
-    }
-
-    @keyframes code-fall {
-      to {
-        transform: translateY(100vh);
-      }
-    }
-
-    /* 愚人节特效 */
-    .april-fools {
-      animation: crazySpin 0.5s linear infinite;
-    }
-
-    @keyframes crazySpin {
-      0% {
-        transform: rotate(0deg) scale(1);
-        filter: hue-rotate(0deg);
-      }
-      25% {
-        transform: rotate(90deg) scale(1.2);
-      }
-      50% {
-        transform: rotate(180deg) scale(0.8);
-        filter: hue-rotate(180deg);
-      }
-      75% {
-        transform: rotate(270deg) scale(1.1);
-      }
-      100% {
-        transform: rotate(360deg) scale(1);
-        filter: hue-rotate(360deg);
-      }
-    }
   </style>
+<base target="_blank">
 </head>
 <body>
-  <!-- 满月元素 -->
-  <div class="moon" id="moon"></div>
-  
-  <!-- 代码雨容器 -->
-  <div class="code-rain" id="code-rain"></div>
-  
-  <!-- 替换原来的h1标题为打字效果 -->
+  <!-- 打字效果 -->
   <div class="typing-container" id="typing-container">
     <div class="typing-text">
       <span id="typing-text"></span><span class="cursor" id="typing-cursor"></span>
     </div>
   </div>
   
+  <!-- 时钟组件 -->
   <div class="component-background">
     <div class="clock">
       <div class="clock-time" id="clock-time">00</div>
@@ -390,19 +243,32 @@
       <div class="clock-am-pm" id="clock-am-pm">AM</div>
     </div>
   </div>
-  <div id="stars"></div>
-  <div id="aurora"></div> <!-- 极光效果容器 -->
+
+  <!-- 指路区域 -->
+  <div class="guide-section">
+    <div class="guide-title">跳转到</div>
+    <div class="guide-panel">
+      <a href="https://github.com/GKll44" class="guide-item" target="_blank">
+        <span>我的github</span>
+        <span class="guide-arrow">→</span>
+      </a>
+      <a href="https://gkll44.github.io/Raycast3DGame/" class="guide-item" target="_blank">
+        <span>伪3D迷宫</span>
+        <span class="guide-arrow">→</span>
+      </a>
+
+    </div>
+    
+  </div>
+
   <script>
-    // 打字效果脚本
     const typingTextElement = document.getElementById('typing-text');
-    const typingCursorElement = document.getElementById('typing-cursor');
     const typingContainer = document.getElementById('typing-container');
     const initialText = "欢迎来到GKll44的主页！";
     const wowText = "哎呀！点我干嘛？>_<";
     let isTyping = false;
     let currentMode = 'initial';
     
-    // 初始打字效果
     function typeInitialText() {
       if (isTyping) return;
       isTyping = true;
@@ -430,13 +296,11 @@
       type();
     }
     
-    // WOW!打字效果
     function typeWowText() {
       if (isTyping) return;
       isTyping = true;
       currentMode = 'wow';
       
-      // 先删除现有文字
       let currentLength = typingTextElement.children.length;
       
       function backspace() {
@@ -445,7 +309,6 @@
           currentLength--;
           setTimeout(backspace, 30);
         } else {
-          // 开始打出WOW!
           let wowIndex = 0;
           
           function typeWow() {
@@ -453,7 +316,6 @@
               const charSpan = document.createElement('span');
               charSpan.textContent = wowText[wowIndex];
               charSpan.classList.add('char');
-              // 立即应用彩色效果
               charSpan.style.color = '#ff0000';
               charSpan.style.textShadow = '0 0 10px #ff0000';
               typingTextElement.appendChild(charSpan);
@@ -461,7 +323,6 @@
               wowIndex++;
               setTimeout(typeWow, 100);
             } else {
-              // 所有字母打完，添加彩虹动画
               typingTextElement.classList.add('wow-text');
               isTyping = false;
             }
@@ -486,26 +347,11 @@
     // 页面加载后开始初始打字效果
     setTimeout(typeInitialText, 500);
 
-    // 以下是原有的时钟和背景效果脚本
+    // 时钟和背景效果
     const clockTimeElement = document.getElementById('clock-time');
     const clockMinuteElement = document.getElementById('clock-minute');
     const clockAmPmElement = document.getElementById('clock-am-pm');
     const bodyElement = document.body;
-    const starsContainer = document.getElementById('stars');
-    const auroraContainer = document.getElementById('aurora');
-    const moonElement = document.getElementById('moon');
-    const codeRainContainer = document.getElementById('code-rain');
-    const numStars = 200;
-    const numMeteors = 10;
-
-    // 创建极光带
-    function createAurora() {
-      for (let i = 0; i < 3; i++) {
-        const band = document.createElement('div');
-        band.className = 'aurora-band';
-        auroraContainer.appendChild(band);
-      }
-    }
 
     // 颜色插值函数
     function interpolateColor(color1, color2, factor) {
@@ -533,179 +379,49 @@
 
     // 平滑过渡背景
     function updateBackground(hours, minutes) {
-      // 定义颜色 (RGB格式)
       const dayTop = hexToRgb('#87CEEB');
       const dayBottom = hexToRgb('#B0E2FF');
       const sunsetTop = hexToRgb('#FF4500');
-      const sunsetMiddle = hexToRgb('#FF8C00');
       const sunsetBottom = hexToRgb('#FFD700');
       const nightTop = hexToRgb('#000033');
       const nightBottom = hexToRgb('#000066');
 
-      // 计算当前时间的分钟表示
       const totalMinutes = hours * 60 + minutes;
       
-      // 过渡时间段定义 (以分钟为单位)
-      const dawnStart = 4 * 60;    // 4:00
-      const dawnEnd = 6 * 60;      // 6:00
-      const sunsetStart = 17 * 60; // 17:00
-      const sunsetEnd = 19 * 60;   // 19:00
-      const nightStart = 20 * 60;  // 20:00
+      const dawnStart = 4 * 60;
+      const dawnEnd = 6 * 60;
+      const sunsetStart = 17 * 60;
+      const sunsetEnd = 19 * 60;
       
-      // 根据时间段设置背景
       if (totalMinutes >= dawnStart && totalMinutes < dawnEnd) {
-        // 黎明过渡 (黑夜 -> 白天)
         const factor = (totalMinutes - dawnStart) / (dawnEnd - dawnStart);
         const top = interpolateColor(nightTop, dayTop, factor);
         const bottom = interpolateColor(nightBottom, dayBottom, factor);
         bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
       } 
       else if (totalMinutes >= sunsetStart && totalMinutes < sunsetEnd) {
-        // 黄昏过渡 (白天 -> 夕阳 -> 黑夜)
         const factor = (totalMinutes - sunsetStart) / (sunsetEnd - sunsetStart);
         
         if (factor < 0.5) {
-          // 前半段: 白天 -> 夕阳
           const subFactor = factor * 2;
           const top = interpolateColor(dayTop, sunsetTop, subFactor);
           const bottom = interpolateColor(dayBottom, sunsetBottom, subFactor);
           bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
         } else {
-          // 后半段: 夕阳 -> 黑夜
           const subFactor = (factor - 0.5) * 2;
           const top = interpolateColor(sunsetTop, nightTop, subFactor);
           const bottom = interpolateColor(sunsetBottom, nightBottom, subFactor);
           bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
         }
       }
-      else if (totalMinutes >= nightStart || totalMinutes < dawnStart) {
-        // 黑夜
+      else if (totalMinutes >= 19 * 60 || totalMinutes < 4 * 60) {
         bodyElement.classList.remove('day-sky', 'sunset-sky');
         bodyElement.classList.add('night-sky');
       }
       else {
-        // 白天
         bodyElement.classList.remove('night-sky', 'sunset-sky');
         bodyElement.classList.add('day-sky');
       }
-    }
-
-    // 农历计算函数 (简化版)
-    function getLunarDate(date) {
-      // 这是一个简化的农历计算，实际应用中应该使用完整的农历算法
-      // 这里我们假设每月都是30天来计算农历日期
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      
-      // 简单计算农历日 (不准确，仅用于演示)
-      const lunarDay = (day % 30) || 30;
-      
-      return {
-        year: year,
-        month: month,
-        day: lunarDay
-      };
-    }
-
-    // 检查特殊日期
-    function checkSpecialDates(date) {
-      const lunarDate = getLunarDate(date);
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      const hours = date.getHours();
-      
-      // 农历十四显示满月
-      if (lunarDate.day === 14) {
-        moonElement.style.display = 'block';
-      } else {
-        moonElement.style.display = 'none';
-      }
-      
-      // 1月1日凌晨放烟花
-      if (month === 1 && day === 1 && hours < 1) {
-        createFireworks();
-      }
-      
-      // 10月24日显示代码雨
-      if (month === 10 && day === 24) {
-        codeRainContainer.style.display = 'block';
-        startCodeRain();
-      } else {
-        codeRainContainer.style.display = 'none';
-        stopCodeRain();
-      }
-      
-      // 4月1日愚人节特效
-      if (month === 4 && day === 1) {
-        document.title = "愚人节快乐！！！";
-        bodyElement.classList.add('april-fools');
-        setTimeout(() => {
-          bodyElement.classList.remove('april-fools');
-        }, 15000);
-      }
-    }
-
-    // 创建烟花效果
-    function createFirework(x, y, color) {
-      const particles = 50;
-      for (let i = 0; i < particles; i++) {
-        const angle = (Math.PI * 2) * (i / particles);
-        const speed = Math.random() * 5 + 2;
-        const firework = document.createElement('div');
-        firework.className = 'firework';
-        firework.style.left = `${x}px`;
-        firework.style.top = `${y}px`;
-        firework.style.color = color;
-        firework.style.setProperty('--x', `${Math.cos(angle) * speed * 20}px`);
-        firework.style.setProperty('--y', `${Math.sin(angle) * speed * 20}px`);
-        document.body.appendChild(firework);
-        
-        setTimeout(() => {
-          firework.remove();
-        }, 1000);
-      }
-    }
-
-    // 随机放烟花
-    function createFireworks() {
-      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-      const fireworksCount = 20;
-      
-      for (let i = 0; i < fireworksCount; i++) {
-        setTimeout(() => {
-          const x = Math.random() * window.innerWidth;
-          const y = Math.random() * window.innerHeight * 0.7;
-          const color = colors[Math.floor(Math.random() * colors.length)];
-          createFirework(x, y, color);
-        }, i * 300);
-      }
-    }
-
-    // 代码雨效果
-    let codeRainInterval;
-    const codeChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-    function startCodeRain() {
-      codeRainInterval = setInterval(() => {
-        const char = document.createElement('div');
-        char.className = 'code-char';
-        char.textContent = codeChars[Math.floor(Math.random() * codeChars.length)];
-        char.style.left = `${Math.random() * 100}vw`;
-        char.style.top = '-20px';
-        char.style.animationDuration = `${Math.random() * 2 + 3}s`;
-        codeRainContainer.appendChild(char);
-        
-        // 移除超出屏幕的字符
-        setTimeout(() => {
-          char.remove();
-        }, 5000);
-      }, 50);
-    }
-
-    function stopCodeRain() {
-      clearInterval(codeRainInterval);
-      codeRainContainer.innerHTML = '';
     }
 
     function updateClock() {
@@ -719,73 +435,13 @@
       clockMinuteElement.textContent = minutes;
       clockAmPmElement.textContent = amPm;
 
-      // 更新背景（平滑过渡）
       updateBackground(hours, now.getMinutes());
-      
-      // 控制星星和极光显示
-      if (hours >= 21 || hours < 6) {
-        // 黑夜：显示星星和极光
-        starsContainer.style.display = 'block';
-        auroraContainer.style.opacity = '0.7';
-      } else if (hours >= 19 && hours < 21) {
-        // 黄昏：逐渐显示星星和极光
-        const sunsetProgress = (hours - 17) + (now.getMinutes() / 60);
-        const opacity = Math.min(0.7, sunsetProgress / 3 * 0.7);
-        starsContainer.style.display = 'block';
-        auroraContainer.style.opacity = opacity.toString();
-      } else if (hours >= 6 && hours < 19) {
-        // 白天：隐藏星星和极光
-        starsContainer.style.display = 'none';
-        auroraContainer.style.opacity = '0';
-      }
-      
-      // 检查特殊日期
-      checkSpecialDates(now);
     }
 
     setInterval(updateClock, 1000);
     updateClock();
 
-    function createStar() {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      star.style.left = `${Math.random() * window.innerWidth}px`;
-      star.style.top = `${Math.random() * window.innerHeight}px`;
-      star.style.animationDuration = `${Math.random() * 2 + 1}s`;
-      starsContainer.appendChild(star);
-    }
-
-    for (let i = 0; i < numStars; i++) {
-      createStar();
-    }
-
-    // 创建极光
-    createAurora();
-
-    function createMeteor() {
-      const meteor = document.createElement('div');
-      meteor.classList.add('meteor');
-      meteor.style.left = `${Math.random() * window.innerWidth}px`;
-      meteor.style.top = `${-Math.random() * 100}px`;
-      meteor.style.animationDuration = `${Math.random() * 2 + 1}s`;
-      starsContainer.appendChild(meteor);
-
-    // 流星生命周期
-      setTimeout(() => {
-        meteor.remove();
-      }, 20000); // 别改太低昂
-    }
-
-    // 流星生成周期
-    function generateMeteors() {
-      setInterval(() => {
-        createMeteor();
-      }, 1000); // 这个也是
-    }
-
-    generateMeteors();
-
-    // 接下来就是监听页面可见变化 visibilitychange（？
+    // 监听页面可见变化
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
         document.title = "ヾ(￣▽￣)Bye~Bye~";
