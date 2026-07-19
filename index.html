@@ -196,34 +196,6 @@
       font-size: 20px;
       margin-left: 10px;
     }
-
-    /* 白天背景 */
-    .day-sky {
-      background: linear-gradient(to bottom, #87CEEB, #B0E2FF);
-    }
-
-    /* 夕阳背景 */
-    .sunset-sky {
-      background: linear-gradient(to bottom, #FF4500, #FF8C00, #FFD700);
-    }
-
-    /* 黑夜背景 */
-    .night-sky {
-      background: linear-gradient(to bottom, #000033, #000066);
-    }
-    
-    /* 过渡背景类 */
-    .sunset-to-night {
-      background: linear-gradient(to bottom, #FF8C00, #000066);
-    }
-    
-    .night-to-sunset {
-      background: linear-gradient(to bottom, #000066, #FF8C00);
-    }
-    
-    .day-to-sunset {
-      background: linear-gradient(to bottom, #B0E2FF, #FFD700);
-    }
   </style>
 <base target="_blank">
 </head>
@@ -254,6 +226,14 @@
       </a>
       <a href="https://gkll44.github.io/Raycast3DGame/" class="guide-item" target="_blank">
         <span>伪3D迷宫</span>
+        <span class="guide-arrow">→</span>
+      </a>
+      <a href="https://gkll44.github.io/PicToPic/" class="guide-item" target="_blank">
+        <span>PicToPic</span>
+        <span class="guide-arrow">→</span>
+      </a>
+      <a href="https://gkll44.github.io/DownloadPage.html" class="guide-item" target="_blank">
+        <span>下载页</span>
         <span class="guide-arrow">→</span>
       </a>
 
@@ -347,81 +327,120 @@
     // 页面加载后开始初始打字效果
     setTimeout(typeInitialText, 500);
 
-    // 时钟和背景效果
+    // ==================== 天空渐变系统（修复版）====================
     const clockTimeElement = document.getElementById('clock-time');
     const clockMinuteElement = document.getElementById('clock-minute');
     const clockAmPmElement = document.getElementById('clock-am-pm');
     const bodyElement = document.body;
 
-    // 颜色插值函数
-    function interpolateColor(color1, color2, factor) {
-      const result = color1.slice();
-      for (let i = 0; i < 3; i++) {
-        result[i] = Math.round(result[i] + factor * (color2[i] - result[i]));
+    /**
+     * 天空颜色配置
+     * 每个时段定义三层颜色（top, mid, bottom），形成更自然的渐变
+     */
+    const SKY_COLORS = {
+      night: {
+        top: [10, 10, 35],
+        mid: [15, 15, 55],
+        bottom: [25, 25, 80]
+      },
+      dawn: {      // 黎明：紫蓝 -> 粉紫 -> 橙粉
+        top: [45, 35, 85],
+        mid: [120, 90, 130],
+        bottom: [255, 150, 110]
+      },
+      day: {       // 白天：天蓝 -> 天蓝 -> 浅蓝
+        top: [70, 160, 220],
+        mid: [135, 206, 235],
+        bottom: [176, 226, 255]
+      },
+      golden: {    // 金色黄昏：淡蓝 -> 金黄 -> 橙黄
+        top: [90, 140, 195],
+        mid: [255, 195, 95],
+        bottom: [255, 170, 70]
+      },
+      sunset: {    // 日落：紫 -> 橙红 -> 深橙
+        top: [75, 55, 110],
+        mid: [255, 95, 45],
+        bottom: [255, 130, 0]
+      },
+      dusk: {      // 暮光：深蓝紫 -> 暗紫红 -> 暗橙
+        top: [30, 25, 65],
+        mid: [80, 50, 90],
+        bottom: [120, 70, 80]
       }
-      return result;
+    };
+
+    /**
+     * 时间轴定义（24小时制，分钟为单位）
+     * 每个时段之间自动进行颜色插值
+     */
+    const TIMELINE = [
+      { time: 0,    color: 'night' },    // 00:00 深夜
+      { time: 4 * 60,  color: 'night' },    // 04:00 仍是夜晚
+      { time: 5 * 60,  color: 'dawn' },     // 05:00 黎明开始
+      { time: 6.5 * 60, color: 'day' },     // 06:30 日出完成
+      { time: 16.5 * 60, color: 'day' },    // 16:30 仍是白天
+      { time: 17.5 * 60, color: 'golden' }, // 17:30 金色黄昏
+      { time: 18.3 * 60, color: 'sunset' }, // 18:18 日落红
+      { time: 19 * 60,  color: 'dusk' },    // 19:00 暮光
+      { time: 20.5 * 60, color: 'night' },  // 20:30 入夜
+      { time: 24 * 60,  color: 'night' }    // 24:00 深夜
+    ];
+
+    // 线性插值
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
     }
 
-    // RGB数组转CSS颜色
-    function rgbToCss(rgbArray) {
-      return `rgb(${rgbArray[0]}, ${rgbArray[1]}, ${rgbArray[2]})`;
+    // RGB数组插值
+    function lerpRGB(c1, c2, t) {
+      return [
+        Math.round(lerp(c1[0], c2[0], t)),
+        Math.round(lerp(c1[1], c2[1], t)),
+        Math.round(lerp(c1[2], c2[2], t))
+      ];
     }
 
-    // 十六进制转RGB数组
-    function hexToRgb(hex) {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? [
-        parseInt(result[1], 16),
-        parseInt(result[2], 16),
-        parseInt(result[3], 16)
-      ] : [0, 0, 0];
+    // RGB转CSS字符串
+    function rgbToCss(rgb) {
+      return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
     }
 
-    // 平滑过渡背景
+    /**
+     * 根据当前时间计算天空渐变颜色
+     * 使用三层渐变（top -> mid -> bottom），更自然
+     */
     function updateBackground(hours, minutes) {
-      const dayTop = hexToRgb('#87CEEB');
-      const dayBottom = hexToRgb('#B0E2FF');
-      const sunsetTop = hexToRgb('#FF4500');
-      const sunsetBottom = hexToRgb('#FFD700');
-      const nightTop = hexToRgb('#000033');
-      const nightBottom = hexToRgb('#000066');
-
       const totalMinutes = hours * 60 + minutes;
+
+      // 找到当前时间所在的时段区间
+      let prev = TIMELINE[0];
+      let next = TIMELINE[TIMELINE.length - 1];
       
-      const dawnStart = 4 * 60;
-      const dawnEnd = 6 * 60;
-      const sunsetStart = 17 * 60;
-      const sunsetEnd = 19 * 60;
-      
-      if (totalMinutes >= dawnStart && totalMinutes < dawnEnd) {
-        const factor = (totalMinutes - dawnStart) / (dawnEnd - dawnStart);
-        const top = interpolateColor(nightTop, dayTop, factor);
-        const bottom = interpolateColor(nightBottom, dayBottom, factor);
-        bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
-      } 
-      else if (totalMinutes >= sunsetStart && totalMinutes < sunsetEnd) {
-        const factor = (totalMinutes - sunsetStart) / (sunsetEnd - sunsetStart);
-        
-        if (factor < 0.5) {
-          const subFactor = factor * 2;
-          const top = interpolateColor(dayTop, sunsetTop, subFactor);
-          const bottom = interpolateColor(dayBottom, sunsetBottom, subFactor);
-          bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
-        } else {
-          const subFactor = (factor - 0.5) * 2;
-          const top = interpolateColor(sunsetTop, nightTop, subFactor);
-          const bottom = interpolateColor(sunsetBottom, nightBottom, subFactor);
-          bodyElement.style.background = `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(bottom)})`;
+      for (let i = 0; i < TIMELINE.length - 1; i++) {
+        if (totalMinutes >= TIMELINE[i].time && totalMinutes < TIMELINE[i + 1].time) {
+          prev = TIMELINE[i];
+          next = TIMELINE[i + 1];
+          break;
         }
       }
-      else if (totalMinutes >= 19 * 60 || totalMinutes < 4 * 60) {
-        bodyElement.classList.remove('day-sky', 'sunset-sky');
-        bodyElement.classList.add('night-sky');
-      }
-      else {
-        bodyElement.classList.remove('night-sky', 'sunset-sky');
-        bodyElement.classList.add('day-sky');
-      }
+
+      // 计算插值因子 (0 ~ 1)
+      const duration = next.time - prev.time;
+      const factor = duration > 0 ? (totalMinutes - prev.time) / duration : 0;
+
+      // 获取前后两个时段的颜色
+      const colorFrom = SKY_COLORS[prev.color];
+      const colorTo = SKY_COLORS[next.color];
+
+      // 对三层颜色分别插值
+      const top = lerpRGB(colorFrom.top, colorTo.top, factor);
+      const mid = lerpRGB(colorFrom.mid, colorTo.mid, factor);
+      const bottom = lerpRGB(colorFrom.bottom, colorTo.bottom, factor);
+
+      // 应用三层渐变
+      bodyElement.style.background = 
+        `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(mid)}, ${rgbToCss(bottom)})`;
     }
 
     function updateClock() {
