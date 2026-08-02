@@ -1,481 +1,211 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GKll44主页</title>
-  <link rel="icon" href="/1.png" type="image/png">
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      margin: 0;
-      overflow: auto; 
-      min-height: 700px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      transition: background 10s ease;
-      background-size: cover;
-      background-attachment: fixed;
-    }
-    
-    /* 打字效果样式 */
-    .typing-container {
-      cursor: pointer;
-      margin-bottom: 20px;
-      z-index: 10;
-    }
-    
-    .typing-text {
-      font-size: 3rem;
-      font-weight: bold;
-      position: relative;
-      display: inline-block;
-    }
-    
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      height: 1.2em;
-      background-color: #fff;
-      animation: blink 1s infinite;
-      vertical-align: middle;
-      margin-left: 5px;
-    }
-    
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-    
-    .char {
-      display: inline-block;
-      color: #fff;
-      text-shadow: 0 0 10px currentColor;
-      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-    }
-    
-    .wow-text .char {
-      animation: rainbowGlow 3s linear infinite;
-      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-    }
-    
-    @keyframes rainbowGlow {
-      0% { 
-        color: #ff0000;
-        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-      }
-      16% { 
-        color: #ff7f00;
-        text-shadow: 0 0 10px #ff7f00, 0 0 20px #ff7f00;
-      }
-      33% { 
-        color: #ffff00;
-        text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00;
-      }
-      50% { 
-        color: #00ff00;
-        text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-      }
-      66% { 
-        color: #0000ff;
-        text-shadow: 0 0 10px #0000ff, 0 0 20px #0000ff;
-      }
-      78% { 
-        color: #9400d3;
-        text-shadow: 0 0 10px #9400d3, 0 0 20px #9400d3;
-      }
-      100% { 
-        color: #ff0000;
-        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-      }
-    }
-
-    .component-background {
-      width: 200px;
-      height: 200px;
-      background-color: rgba(255, 255, 255, 0.692);
-      backdrop-filter: blur(6px);
-      border-radius: 10px;
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      color: #616161;
-      font-size: 24px;
-      font-weight: bold;
-      z-index: 5; 
-      padding: 20px;
-      box-sizing: border-box; 
-      background-clip: padding-box;
-    }
-    
-    .clock {
-      font-family: 'Trebuchet MS', serif;
-      font-size: 48px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .clock-time {
-      font-size: 64px;
-    }
-    .clock-minute {
-      font-size: 64px;
-      position: relative;
-    }
-    .clock-am-pm {
-      font-size: 16px;
-      position: relative;
-      bottom: 29px;
-      right: -50px;
-    }
-
-    /* 指路区域样式 */
-    .guide-section {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 5;
-    }
-
-    .guide-title {
-      font-size: 28px;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 15px;
-      text-shadow: 0 0 10px rgba(0,0,0,0.3);
-      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-    }
-
-    .guide-panel {
-      width: 280px;
-      min-height: 150px;
-      background-color: rgba(0, 0, 0, 0);
-      backdrop-filter: blur(6px);
-      border-style:double;
-      padding: 20px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .guide-item {
-      width: 100%;
-      padding: 12px 0px;
-      background-color: rgba(255, 255, 255, 0.5);
-      border-radius: 8px;
-      text-decoration: none;
-      color: #f8f8f8;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .guide-item:hover {
-      background-color: rgba(255, 255, 255, 0.8);
-      transform: translateX(5px);
-    }
-
-    .guide-arrow {
-      color: #0065fc;
-      font-size: 20px;
-      margin-left: 10px;
-    }
-  </style>
-<base target="_blank">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GKLL44的主页</title>
+    <link rel="stylesheet" href="cssStyle.css">
+    <link rel="icon" href="1.png" type="image/png">
 </head>
 <body>
-  <!-- 打字效果 -->
-  <div class="typing-container" id="typing-container">
-    <div class="typing-text">
-      <span id="typing-text"></span><span class="cursor" id="typing-cursor"></span>
+    <img src="resources/banner512.png" alt="横幅" class="imgBanner">
+
+    <div id="text-wrapper">
+        <span>G</span>
+        <span>K</span>
+        <span>L</span>
+        <span>L</span>
+        <span>4</span>
+        <span>4</span>
+        <span style="margin-left: 2vw;">i</span>
+        <span style="margin-right: 2vw;">s</span>
+        <span>h</span>
+        <span>e</span>
+        <span>r</span>
+        <span>e</span>
+        <span>!</span>
     </div>
-  </div>
-  
-  <!-- 时钟组件 -->
-  <div class="component-background">
-    <div class="clock">
-      <div class="clock-time" id="clock-time">00</div>
-      <div class="clock-minute" id="clock-minute">00</div>
-      <div class="clock-am-pm" id="clock-am-pm">AM</div>
+
+    <div class="container clock-box">
+        <p class="date" id="date">zzz</p>
+        <p class="time" id="time">--:--:--</p>
     </div>
-  </div>
 
-  <!-- 指路区域 -->
-  <div class="guide-section">
-    <div class="guide-title">跳转到</div>
-    <div class="guide-panel">
-      <a href="https://github.com/GKll44" class="guide-item" target="_blank">
-        <span>我的github</span>
-        <span class="guide-arrow">→</span>
-      </a>
-      <a href="https://gkll44.github.io/Raycast3DGame/" class="guide-item" target="_blank">
-        <span>伪3D迷宫</span>
-        <span class="guide-arrow">→</span>
-      </a>
-      <a href="https://gkll44.github.io/PicToPic/" class="guide-item" target="_blank">
-        <span>PicToPic</span>
-        <span class="guide-arrow">→</span>
-      </a>
-      <a href="https://gkll44.github.io/DownloadPage.html" class="guide-item" target="_blank">
-        <span>下载页</span>
-        <span class="guide-arrow">→</span>
-      </a>
+    <div class="container">
+        <div class="tabholder">
+            <div class="tab active" data-tab="0">主页</div>
+            <div class="tab" data-tab="1">链接</div>
+            <div class="tab" data-tab="2">关于</div>
+            <div class="tab" data-tab="3">工具</div>
+        </div>
+        <div class="card tab-content-wrapper">
+            <!-- Main Tab -->
+            <div class="content active" data-content="0">
+                <h3 class="blacktitle">欢迎</h3>
+                <p>这是第一个标签页的内容。请随意探索本页面的交互元素。</p>
 
+                <p>今天的日期是：<span id="current-date"></span></p>
+                <p>当前时间是：<span id="current-time"></span></p>
+                <p id="page-load-message">截至目前，您已经加载了本页面 <span id="load-count">1</span>次！</p>
+                <button id="reset-count">重置加载次数</button>
+
+                <p style="font-size: large;">想玩小游戏吗？</p>
+                <div id="game-wrapper">
+                    <canvas id="gameCanvas" width="400" height="300"></canvas>
+                </div>
+                <div class="game-controls">
+                    <p>您正在玩：<span id="game-name">Snake</span></p>
+                    <p id="game-info">得分：<span id="game-score">0</span> | 最高分：<span id="game-high">0</span></p>
+                    <button id="game-start">开始</button>
+                    <button id="game-pause">暂停</button>
+                    <button id="change-game">换一个！</button>
+                </div>
+            </div>
+
+            <!-- Links Tab -->
+            <div class="content" data-content="1">
+                <h3 class="blacktitle">链接</h3>
+                <p>访问这些网站：</p>
+                <ul>
+                    <li><a href="https://gkll44.github.io/PicToPic/" target="_blank">Pic To Pic</a></li>
+                    <li><a href="https://gkll44.github.io/DownloadPage.html" target="_blank">DownloadPage</a></li>
+                    <li><a href="https://gkll44.github.io/Raycast3DGame/" target="_blank">Raycast 3D Game</a></li>
+                </ul>
+            </div>
+
+            <!-- About Tab -->
+            <div class="content" data-content="2">
+                <h3 class="blacktitle">关于</h3>
+                <p>本页面功能：</p>
+                <ul>
+                    <li>实时动画标题，带有颜色循环效果</li>
+                    <li>实时时钟，显示日期</li>
+                    <li>交互式标签系统</li>
+                    <li>样式化的按钮、滑块和输入框</li>
+                    <li>响应式卡片布局</li>
+                    <li>一个画布中的5款小游戏：贪吃蛇、乒乓球、打砖块、像素鸟、记忆配对</li>
+                </ul>
+                <div class="box" style="margin-top: 15px; padding: 10px;">
+                    <p class="smalltext">使用原生 HTML、CSS 和 JavaScript 构建。</p>
+                </div>
+
+                <h3 class="blacktitle" style="margin-top: 20px;">页面统计</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="stat-games">5</span>
+                        <span class="stat-label">游戏</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="stat-tabs">5</span>
+                        <span class="stat-label">标签</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="stat-tools">4</span>
+                        <span class="stat-label">工具</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="stat-uptime">0</span>
+                        <span class="stat-label">在线秒数</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div class="content" data-content="3">
+                <h3 class="blacktitle">工具</h3>
+
+                <!-- Calculator -->
+                <div class="tool-section">
+                    <h4 class="tool-title">计算器</h4>
+                    <div class="calculator">
+                        <input type="text" id="calc-display" class="calc-display" readonly value="0">
+                        <div class="calc-buttons">
+                            <button class="calc-btn calc-clear" data-val="C">C</button>
+                            <button class="calc-btn calc-op" data-val="DEL">⌫</button>
+                            <button class="calc-btn calc-op" data-val="%">%</button>
+                            <button class="calc-btn calc-op" data-val="/">÷</button>
+                            <button class="calc-btn" data-val="7">7</button>
+                            <button class="calc-btn" data-val="8">8</button>
+                            <button class="calc-btn" data-val="9">9</button>
+                            <button class="calc-btn calc-op" data-val="*">×</button>
+                            <button class="calc-btn" data-val="4">4</button>
+                            <button class="calc-btn" data-val="5">5</button>
+                            <button class="calc-btn" data-val="6">6</button>
+                            <button class="calc-btn calc-op" data-val="-">−</button>
+                            <button class="calc-btn" data-val="1">1</button>
+                            <button class="calc-btn" data-val="2">2</button>
+                            <button class="calc-btn" data-val="3">3</button>
+                            <button class="calc-btn calc-op" data-val="+">+</button>
+                            <button class="calc-btn calc-zero" data-val="0">0</button>
+                            <button class="calc-btn" data-val=".">.</button>
+                            <button class="calc-btn calc-eq" data-val="=">=</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Picker -->
+                <div class="tool-section">
+                    <h4 class="tool-title">颜色选择器</h4>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="color-picker" value="#4aff4a">
+                        <div class="color-info">
+                            <div class="color-preview" id="color-preview"></div>
+                            <div class="color-values">
+                                <span id="color-hex">#4AFF4A</span>
+                                <span id="color-rgb">rgb(74, 255, 74)</span>
+                            </div>
+                        </div>
+                        <div class="color-palette" id="color-palette">
+                            <div class="palette-color" style="background:#ff4444" data-color="#ff4444"></div>
+                            <div class="palette-color" style="background:#ff8844" data-color="#ff8844"></div>
+                            <div class="palette-color" style="background:#ffcc44" data-color="#ffcc44"></div>
+                            <div class="palette-color" style="background:#44ff44" data-color="#44ff44"></div>
+                            <div class="palette-color" style="background:#4444ff" data-color="#4444ff"></div>
+                            <div class="palette-color" style="background:#ff44ff" data-color="#ff44ff"></div>
+                            <div class="palette-color" style="background:#44ffff" data-color="#44ffff"></div>
+                            <div class="palette-color" style="background:#ffffff" data-color="#ffffff"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Random Quote -->
+                <div class="tool-section">
+                    <h4 class="tool-title">随机名言</h4>
+                    <div class="quote-box" id="quote-box">
+                        <p class="quote-text" id="quote-text">点击按钮获取一条随机名言！</p>
+                        <p class="quote-author" id="quote-author"></p>
+                    </div>
+                    <button id="new-quote-btn" style="margin-top: 10px;">新名言</button>
+                </div>
+
+                <!-- Password Generator -->
+                <div class="tool-section">
+                    <h4 class="tool-title">密码生成器</h4>
+                    <div class="password-gen">
+                        <input type="text" id="password-output" readonly value="">
+                        <div class="password-options">
+                            <label>长度：<span id="pw-length-val">12</span></label>
+                            <input type="range" id="pw-length" class="slider" min="6" max="32" value="12">
+                            <div class="pw-checkboxes">
+                                <label><input type="checkbox" id="pw-upper" checked> 大写字母</label>
+                                <label><input type="checkbox" id="pw-lower" checked> 小写字母</label>
+                                <label><input type="checkbox" id="pw-numbers" checked> 数字</label>
+                                <label><input type="checkbox" id="pw-symbols"> 符号</label>
+                            </div>
+                        </div>
+                        <button id="generate-pw">生成密码</button>
+                        <button id="copy-pw">复制到剪贴板</button>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
     </div>
-    
-  </div>
 
-  <script>
-    const typingTextElement = document.getElementById('typing-text');
-    const typingContainer = document.getElementById('typing-container');
-    const initialText = "欢迎来到GKll44的主页！";
-    const wowText = "哎呀！点我干嘛？>_<";
-    let isTyping = false;
-    let currentMode = 'initial';
-    
-    function typeInitialText() {
-      if (isTyping) return;
-      isTyping = true;
-      currentMode = 'initial';
-      typingTextElement.innerHTML = '';
-      typingTextElement.className = 'typing-text';
-      let currentIndex = 0;
-      
-      function type() {
-        if (currentIndex < initialText.length) {
-          const charSpan = document.createElement('span');
-          charSpan.textContent = initialText[currentIndex];
-          charSpan.classList.add('char');
-          charSpan.style.color = '#fff';
-          charSpan.style.textShadow = '0 0 5px #fff';
-          typingTextElement.appendChild(charSpan);
-          
-          currentIndex++;
-          setTimeout(type, 50);
-        } else {
-          isTyping = false;
-        }
-      }
-      
-      type();
-    }
-    
-    function typeWowText() {
-      if (isTyping) return;
-      isTyping = true;
-      currentMode = 'wow';
-      
-      let currentLength = typingTextElement.children.length;
-      
-      function backspace() {
-        if (currentLength > 0) {
-          typingTextElement.removeChild(typingTextElement.lastChild);
-          currentLength--;
-          setTimeout(backspace, 30);
-        } else {
-          let wowIndex = 0;
-          
-          function typeWow() {
-            if (wowIndex < wowText.length) {
-              const charSpan = document.createElement('span');
-              charSpan.textContent = wowText[wowIndex];
-              charSpan.classList.add('char');
-              charSpan.style.color = '#ff0000';
-              charSpan.style.textShadow = '0 0 10px #ff0000';
-              typingTextElement.appendChild(charSpan);
-              
-              wowIndex++;
-              setTimeout(typeWow, 100);
-            } else {
-              typingTextElement.classList.add('wow-text');
-              isTyping = false;
-            }
-          }
-          
-          typeWow();
-        }
-      }
-      
-      backspace();
-    }
-    
-    // 点击事件处理
-    typingContainer.addEventListener('click', function() {
-      if (currentMode === 'initial') {
-        typeWowText();
-      } else {
-        typeInitialText();
-      }
-    });
-    
-    // 页面加载后开始初始打字效果
-    setTimeout(typeInitialText, 500);
-
-    // ==================== 天空渐变系统（修复版）====================
-    const clockTimeElement = document.getElementById('clock-time');
-    const clockMinuteElement = document.getElementById('clock-minute');
-    const clockAmPmElement = document.getElementById('clock-am-pm');
-    const bodyElement = document.body;
-
-    /**
-     * 天空颜色配置
-     * 每个时段定义三层颜色（top, mid, bottom），形成更自然的渐变
-     */
-    const SKY_COLORS = {
-      night: {
-        top: [10, 10, 35],
-        mid: [15, 15, 55],
-        bottom: [25, 25, 80]
-      },
-      dawn: {      // 黎明：紫蓝 -> 粉紫 -> 橙粉
-        top: [45, 35, 85],
-        mid: [120, 90, 130],
-        bottom: [255, 150, 110]
-      },
-      day: {       // 白天：天蓝 -> 天蓝 -> 浅蓝
-        top: [70, 160, 220],
-        mid: [135, 206, 235],
-        bottom: [176, 226, 255]
-      },
-      golden: {    // 金色黄昏：淡蓝 -> 金黄 -> 橙黄
-        top: [90, 140, 195],
-        mid: [255, 195, 95],
-        bottom: [255, 170, 70]
-      },
-      sunset: {    // 日落：紫 -> 橙红 -> 深橙
-        top: [75, 55, 110],
-        mid: [255, 95, 45],
-        bottom: [255, 130, 0]
-      },
-      dusk: {      // 暮光：深蓝紫 -> 暗紫红 -> 暗橙
-        top: [30, 25, 65],
-        mid: [80, 50, 90],
-        bottom: [120, 70, 80]
-      }
-    };
-
-    /**
-     * 时间轴定义（24小时制，分钟为单位）
-     * 每个时段之间自动进行颜色插值
-     */
-    const TIMELINE = [
-      { time: 0,    color: 'night' },    // 00:00 深夜
-      { time: 4 * 60,  color: 'night' },    // 04:00 仍是夜晚
-      { time: 5 * 60,  color: 'dawn' },     // 05:00 黎明开始
-      { time: 6.5 * 60, color: 'day' },     // 06:30 日出完成
-      { time: 16.5 * 60, color: 'day' },    // 16:30 仍是白天
-      { time: 17.5 * 60, color: 'golden' }, // 17:30 金色黄昏
-      { time: 18.3 * 60, color: 'sunset' }, // 18:18 日落红
-      { time: 19 * 60,  color: 'dusk' },    // 19:00 暮光
-      { time: 20.5 * 60, color: 'night' },  // 20:30 入夜
-      { time: 24 * 60,  color: 'night' }    // 24:00 深夜
-    ];
-
-    // 线性插值
-    function lerp(a, b, t) {
-      return a + (b - a) * t;
-    }
-
-    // RGB数组插值
-    function lerpRGB(c1, c2, t) {
-      return [
-        Math.round(lerp(c1[0], c2[0], t)),
-        Math.round(lerp(c1[1], c2[1], t)),
-        Math.round(lerp(c1[2], c2[2], t))
-      ];
-    }
-
-    // RGB转CSS字符串
-    function rgbToCss(rgb) {
-      return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-    }
-
-    /**
-     * 根据当前时间计算天空渐变颜色
-     * 使用三层渐变（top -> mid -> bottom），更自然
-     */
-    function updateBackground(hours, minutes) {
-      const totalMinutes = hours * 60 + minutes;
-
-      // 找到当前时间所在的时段区间
-      let prev = TIMELINE[0];
-      let next = TIMELINE[TIMELINE.length - 1];
-      
-      for (let i = 0; i < TIMELINE.length - 1; i++) {
-        if (totalMinutes >= TIMELINE[i].time && totalMinutes < TIMELINE[i + 1].time) {
-          prev = TIMELINE[i];
-          next = TIMELINE[i + 1];
-          break;
-        }
-      }
-
-      // 计算插值因子 (0 ~ 1)
-      const duration = next.time - prev.time;
-      const factor = duration > 0 ? (totalMinutes - prev.time) / duration : 0;
-
-      // 获取前后两个时段的颜色
-      const colorFrom = SKY_COLORS[prev.color];
-      const colorTo = SKY_COLORS[next.color];
-
-      // 对三层颜色分别插值
-      const top = lerpRGB(colorFrom.top, colorTo.top, factor);
-      const mid = lerpRGB(colorFrom.mid, colorTo.mid, factor);
-      const bottom = lerpRGB(colorFrom.bottom, colorTo.bottom, factor);
-
-      // 应用三层渐变
-      bodyElement.style.background = 
-        `linear-gradient(to bottom, ${rgbToCss(top)}, ${rgbToCss(mid)}, ${rgbToCss(bottom)})`;
-    }
-
-    function updateClock() {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const amPm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = String(hours % 12 || 12).padStart(2, '0');
-
-      clockTimeElement.textContent = displayHours;
-      clockMinuteElement.textContent = minutes;
-      clockAmPmElement.textContent = amPm;
-
-      updateBackground(hours, now.getMinutes());
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // 监听页面可见变化
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) {
-        document.title = "ヾ(￣▽￣)Bye~Bye~";
-      } else {
-        document.title = "又见面了哦(❁´◡`❁)";
-        setTimeout(() => {
-          document.title = "GKll44主页";
-        }, 1000);
-      }
-    });
-
-    window.addEventListener('resize', () => {
-      const now = new Date();
-      updateBackground(now.getHours(), now.getMinutes());
-    });
-  </script>
+    <script src="JSscript.js"></script>
+    <div class="container footer">
+        <p class="smalltext">JS 加载成功</p>
+    </div>
 </body>
 </html>
