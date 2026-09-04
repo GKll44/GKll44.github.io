@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Special Thing...</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; cursor: pointer; }
+.content { display: none; flex-direction: column; align-items: center; }
+.content.show { display: flex; }
+video { width: 75%; }
+#lyrics { margin-top: 24px; font-size: 28px; text-align: center; min-height: 40px; }
+#lyrics span { opacity: 0.4; transition: opacity 0.15s; }
+#lyrics span.active { opacity: 1; color: #4fc3f7; }
+</style>
+</head>
+<body>
+<div class="content" id="content">
+<h1 id="title" style="color:aliceblue">Got Rick Rolled lol</h1>
+<video id="video" src="RickAstley.mp4"></video>
+<div id="lyrics"></div>
+</div>
+<div id="ending" style="display:none; flex-direction:column; align-items:center;">
+<h1 style="color:aliceblue; margin-bottom:20px;">This song is really nice, haha</h1>
+<button id="replay" style="padding:12px 32px; font-size:18px; cursor:pointer; background:#4fc3f7; border:none; border-radius:6px; color:#000;">replay</button>
+</div>
+<script>
+const video = document.getElementById('video');
+const lyricsEl = document.getElementById('lyrics');
+let words = [];
+let currentIdx = 0;
+let started = false;
+
+fetch('txt.lrc').then(r => r.text()).then(text => {
+  const lines = text.split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    const re = /\[(\d+):(\d+\.\d+)\]([^\[]*)/g;
+    let m, lineWords = [];
+    while ((m = re.exec(trimmed)) !== null) {
+      const t = parseFloat(m[1]) * 60 + parseFloat(m[2]);
+      const w = m[3].trim();
+      if (w) lineWords.push({ time: t, word: w });
+    }
+    if (lineWords.length) {
+      lineWords[0].lineStart = true;
+      words.push(...lineWords);
+    }
+  }
+  words.sort((a, b) => a.time - b.time);
+});
+
+function start(enableSound = true) {
+  if (started && !enableSound) return;
+  started = true;
+  document.getElementById('content').classList.add('show');
+  document.body.style.cursor = 'default';
+  if (enableSound) video.muted = false;
+  video.play().catch(() => {
+    video.muted = true;
+    video.play();
+  });
+}
+
+document.body.addEventListener('click', () => start(true));
+
+video.addEventListener('ended', () => {
+  document.getElementById('content').classList.remove('show');
+  document.getElementById('ending').style.display = 'flex';
+});
+
+document.getElementById('replay').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('ending').style.display = 'none';
+  document.getElementById('title').style.display = 'none';
+  document.getElementById('content').classList.add('show');
+  lyricsEl.innerHTML = '';
+  currentIdx = 0;
+  video.currentTime = 0;
+  video.play();
+});
+
+video.addEventListener('timeupdate', () => {
+  const t = video.currentTime;
+  while (currentIdx < words.length && t >= words[currentIdx].time) {
+    const w = words[currentIdx];
+    if (w.lineStart && currentIdx > 0) lyricsEl.innerHTML = '';
+    const span = document.createElement('span');
+    span.textContent = w.word + ' ';
+    lyricsEl.appendChild(span);
+    setTimeout(() => span.classList.add('active'), 10);
+    currentIdx++;
+  }
+});
+
+video.addEventListener('seeking', () => {
+  const t = video.currentTime;
+  currentIdx = 0;
+  lyricsEl.innerHTML = '';
+  for (let i = 0; i < words.length; i++) {
+    if (words[i].time > t) break;
+    currentIdx = i + 1;
+  }
+  for (let i = 0; i < currentIdx; i++) {
+    if (words[i].lineStart && i > 0) lyricsEl.innerHTML = '';
+    const span = document.createElement('span');
+    span.textContent = words[i].word + ' ';
+    span.classList.add('active');
+    lyricsEl.appendChild(span);
+  }
+});
+</script>
+</body>
+</html>
