@@ -1,211 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GKLL44的主页</title>
-    <link rel="stylesheet" href="cssStyle.css">
-    <link rel="icon" href="1.png" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GKll44主页</title>
+  <link rel="icon" href="1.png" type="image/png">
+  <link rel="stylesheet" href="cssStyle.css">
 </head>
 <body>
-    <img src="resources/banner512.png" alt="横幅" class="imgBanner">
 
-    <div id="text-wrapper">
-        <span>G</span>
-        <span>K</span>
-        <span>L</span>
-        <span>L</span>
-        <span>4</span>
-        <span>4</span>
-        <span style="margin-left: 2vw;">i</span>
-        <span style="margin-right: 2vw;">s</span>
-        <span>h</span>
-        <span>e</span>
-        <span>r</span>
-        <span>e</span>
-        <span>!</span>
+  <div class="bgBlur"></div>
+
+  <!-- 打字效果 -->
+  <div class="typing-container" id="typing-container">
+    <div class="typing-text">
+      <span id="typing-text"></span><span class="cursor" id="typing-cursor"></span>
+    </div>
+  </div>
+
+  <!-- 时钟组件 -->
+  <div class="component-background clock-box">
+    <div class="clock">
+      <div class="clock-time" id="clock-time">00</div>
+      <div class="clock-minute" id="clock-minute">00</div>
+      <div class="clock-am-pm" id="clock-am-pm">AM</div>
+    </div>
+  </div>
+  <p class="date" id="date">zzz</p>
+
+  <!-- Tab系统 -->
+  <div class="tab-system">
+    <div class="tabholder">
+      <div class="tab active" data-tab="0">主页</div>
+      <div class="tab" data-tab="1">跳转到</div>
+      <div class="tab" data-tab="2">工具</div>
     </div>
 
-    <div class="container clock-box">
-        <p class="date" id="date">zzz</p>
-        <p class="time" id="time">--:--:--</p>
-    </div>
+    <div class="card tab-content-wrapper">
+      <!-- 主页 Tab -->
+      <div class="content active" data-content="0">
+        <h3 class="guide-title">欢迎来到 GKll44 的主页！</h3>
+        <p>这是我自己的个人主页。大改版！看下次更新会发生生什么吧！</p>
+        <marquee behavior="alternate" style="font-weight: bold; font-size: larger; color: #3f51b5">~(￣▽￣)~</marquee>
+        <span>*一个弹来弹去的颜文字</span>
+        <p>今天的日期是：<span id="current-date"></span></p>
+        <p>当前时间是：<span id="current-time"></span></p>
+        <p id="page-load-message">你已经加载本页面 <span id="load-count">1</span> 次啦！</p>
+        <button id="reset-count">重置计数</button>
 
-    <div class="container">
-        <div class="tabholder">
-            <div class="tab active" data-tab="0">主页</div>
-            <div class="tab" data-tab="1">链接</div>
-            <div class="tab" data-tab="2">关于</div>
-            <div class="tab" data-tab="3">工具</div>
+        <p style="font-size: large; margin-top: 20px;">想玩迷你小游戏吗？</p>
+        <div id="game-wrapper">
+          <canvas id="gameCanvas" width="400" height="300"></canvas>
+          <div id="game-side-panel" style="display:none;">
+            <div class="side-box">
+              <p class="side-title">分数</p>
+              <p class="side-value" id="game-score">0</p>
+            </div>
+            <div class="side-box">
+              <p class="side-title">最高分</p>
+              <p class="side-value" id="game-high">0</p>
+            </div>
+          </div>
         </div>
-        <div class="card tab-content-wrapper">
-            <!-- Main Tab -->
-            <div class="content active" data-content="0">
-                <h3 class="blacktitle">欢迎</h3>
-                <p>这是第一个标签页的内容。请随意探索本页面的交互元素。</p>
-
-                <p>今天的日期是：<span id="current-date"></span></p>
-                <p>当前时间是：<span id="current-time"></span></p>
-                <p id="page-load-message">截至目前，您已经加载了本页面 <span id="load-count">1</span>次！</p>
-                <button id="reset-count">重置加载次数</button>
-
-                <p style="font-size: large;">想玩小游戏吗？</p>
-                <div id="game-wrapper">
-                    <canvas id="gameCanvas" width="400" height="300"></canvas>
-                </div>
-                <div class="game-controls">
-                    <p>您正在玩：<span id="game-name">Snake</span></p>
-                    <p id="game-info">得分：<span id="game-score">0</span> | 最高分：<span id="game-high">0</span></p>
-                    <button id="game-start">开始</button>
-                    <button id="game-pause">暂停</button>
-                    <button id="change-game">换一个！</button>
-                </div>
-            </div>
-
-            <!-- Links Tab -->
-            <div class="content" data-content="1">
-                <h3 class="blacktitle">链接</h3>
-                <p>访问这些网站：</p>
-                <ul>
-                    <li><a href="https://gkll44.github.io/PicToPic/" target="_blank">Pic To Pic</a></li>
-                    <li><a href="https://gkll44.github.io/DownloadPage.html" target="_blank">DownloadPage</a></li>
-                    <li><a href="https://gkll44.github.io/Raycast3DGame/" target="_blank">Raycast 3D Game</a></li>
-                </ul>
-            </div>
-
-            <!-- About Tab -->
-            <div class="content" data-content="2">
-                <h3 class="blacktitle">关于</h3>
-                <p>本页面功能：</p>
-                <ul>
-                    <li>实时动画标题，带有颜色循环效果</li>
-                    <li>实时时钟，显示日期</li>
-                    <li>交互式标签系统</li>
-                    <li>样式化的按钮、滑块和输入框</li>
-                    <li>响应式卡片布局</li>
-                    <li>一个画布中的5款小游戏：贪吃蛇、乒乓球、打砖块、像素鸟、记忆配对</li>
-                </ul>
-                <div class="box" style="margin-top: 15px; padding: 10px;">
-                    <p class="smalltext">使用原生 HTML、CSS 和 JavaScript 构建。</p>
-                </div>
-
-                <h3 class="blacktitle" style="margin-top: 20px;">页面统计</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number" id="stat-games">5</span>
-                        <span class="stat-label">游戏</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="stat-tabs">5</span>
-                        <span class="stat-label">标签</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="stat-tools">4</span>
-                        <span class="stat-label">工具</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" id="stat-uptime">0</span>
-                        <span class="stat-label">在线秒数</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tools Tab -->
-            <div class="content" data-content="3">
-                <h3 class="blacktitle">工具</h3>
-
-                <!-- Calculator -->
-                <div class="tool-section">
-                    <h4 class="tool-title">计算器</h4>
-                    <div class="calculator">
-                        <input type="text" id="calc-display" class="calc-display" readonly value="0">
-                        <div class="calc-buttons">
-                            <button class="calc-btn calc-clear" data-val="C">C</button>
-                            <button class="calc-btn calc-op" data-val="DEL">⌫</button>
-                            <button class="calc-btn calc-op" data-val="%">%</button>
-                            <button class="calc-btn calc-op" data-val="/">÷</button>
-                            <button class="calc-btn" data-val="7">7</button>
-                            <button class="calc-btn" data-val="8">8</button>
-                            <button class="calc-btn" data-val="9">9</button>
-                            <button class="calc-btn calc-op" data-val="*">×</button>
-                            <button class="calc-btn" data-val="4">4</button>
-                            <button class="calc-btn" data-val="5">5</button>
-                            <button class="calc-btn" data-val="6">6</button>
-                            <button class="calc-btn calc-op" data-val="-">−</button>
-                            <button class="calc-btn" data-val="1">1</button>
-                            <button class="calc-btn" data-val="2">2</button>
-                            <button class="calc-btn" data-val="3">3</button>
-                            <button class="calc-btn calc-op" data-val="+">+</button>
-                            <button class="calc-btn calc-zero" data-val="0">0</button>
-                            <button class="calc-btn" data-val=".">.</button>
-                            <button class="calc-btn calc-eq" data-val="=">=</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Color Picker -->
-                <div class="tool-section">
-                    <h4 class="tool-title">颜色选择器</h4>
-                    <div class="color-picker-wrapper">
-                        <input type="color" id="color-picker" value="#4aff4a">
-                        <div class="color-info">
-                            <div class="color-preview" id="color-preview"></div>
-                            <div class="color-values">
-                                <span id="color-hex">#4AFF4A</span>
-                                <span id="color-rgb">rgb(74, 255, 74)</span>
-                            </div>
-                        </div>
-                        <div class="color-palette" id="color-palette">
-                            <div class="palette-color" style="background:#ff4444" data-color="#ff4444"></div>
-                            <div class="palette-color" style="background:#ff8844" data-color="#ff8844"></div>
-                            <div class="palette-color" style="background:#ffcc44" data-color="#ffcc44"></div>
-                            <div class="palette-color" style="background:#44ff44" data-color="#44ff44"></div>
-                            <div class="palette-color" style="background:#4444ff" data-color="#4444ff"></div>
-                            <div class="palette-color" style="background:#ff44ff" data-color="#ff44ff"></div>
-                            <div class="palette-color" style="background:#44ffff" data-color="#44ffff"></div>
-                            <div class="palette-color" style="background:#ffffff" data-color="#ffffff"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Random Quote -->
-                <div class="tool-section">
-                    <h4 class="tool-title">随机名言</h4>
-                    <div class="quote-box" id="quote-box">
-                        <p class="quote-text" id="quote-text">点击按钮获取一条随机名言！</p>
-                        <p class="quote-author" id="quote-author"></p>
-                    </div>
-                    <button id="new-quote-btn" style="margin-top: 10px;">新名言</button>
-                </div>
-
-                <!-- Password Generator -->
-                <div class="tool-section">
-                    <h4 class="tool-title">密码生成器</h4>
-                    <div class="password-gen">
-                        <input type="text" id="password-output" readonly value="">
-                        <div class="password-options">
-                            <label>长度：<span id="pw-length-val">12</span></label>
-                            <input type="range" id="pw-length" class="slider" min="6" max="32" value="12">
-                            <div class="pw-checkboxes">
-                                <label><input type="checkbox" id="pw-upper" checked> 大写字母</label>
-                                <label><input type="checkbox" id="pw-lower" checked> 小写字母</label>
-                                <label><input type="checkbox" id="pw-numbers" checked> 数字</label>
-                                <label><input type="checkbox" id="pw-symbols"> 符号</label>
-                            </div>
-                        </div>
-                        <button id="generate-pw">生成密码</button>
-                        <button id="copy-pw">复制到剪贴板</button>
-                    </div>
-                </div>
-            </div>
-
-            </div>
+        <div class="game-controls">
+          <p>游戏：<span id="game-name">Snake</span></p>
+          <p id="game-info">分数：<span id="game-score-text">0</span> | 最高：<span id="game-high-text">0</span></p>
+          <button id="game-start">开始</button>
+          <button id="game-pause">暂停</button>
+          <button id="change-game">另一个！</button>
         </div>
-    </div>
+      </div>
 
-    <script src="JSscript.js"></script>
-    <div class="container footer">
-        <p class="smalltext">JS 加载成功</p>
+      <!-- 跳转到 Tab -->
+      <div class="content" data-content="1">
+        <h3 class="guide-title">跳转到</h3>
+        <div class="guide-panel">
+          <a href="https://github.com/GKll44" class="guide-item" target="_blank">
+            <span>我的github</span>
+            <span class="guide-arrow">→</span>
+          </a>
+          <a href="https://gkll44.github.io/Raycast3DGame/" class="guide-item" target="_blank">
+            <span>伪3D迷宫</span>
+            <span class="guide-arrow">→</span>
+          </a>
+          <a href="https://gkll44.github.io/PicToPic/" class="guide-item" target="_blank">
+            <span>PicToPic</span>
+            <span class="guide-arrow">→</span>
+          </a>
+          <a href="https://gkll44.github.io/DownloadPage.html" class="guide-item" target="_blank">
+            <span>下载页</span>
+            <span class="guide-arrow">→</span>
+          </a>
+
+	<a href="https://gkll44.github.io/szdjkhv" style="font-size: 12px" target="_blank">
+            <span>你会后悔的</span>
+          </a>
+          
+        </div>
+      </div>
+      <!-- 工具 Tab -->
+      <div class="content" data-content="2">
+        <h3 class="guide-title">工具箱</h3>
+
+        <!-- 计算器 -->
+        <div class="tool-section">
+          <h4 class="tool-title">计算器</h4>
+          <div class="calculator">
+            <input type="text" id="calc-display" class="calc-display" readonly value="0">
+            <div class="calc-buttons">
+              <button class="calc-btn calc-clear" data-val="C">C</button>
+              <button class="calc-btn calc-op" data-val="DEL">⌫</button>
+              <button class="calc-btn calc-op" data-val="%">%</button>
+              <button class="calc-btn calc-op" data-val="/">÷</button>
+              <button class="calc-btn" data-val="7">7</button>
+              <button class="calc-btn" data-val="8">8</button>
+              <button class="calc-btn" data-val="9">9</button>
+              <button class="calc-btn calc-op" data-val="*">×</button>
+              <button class="calc-btn" data-val="4">4</button>
+              <button class="calc-btn" data-val="5">5</button>
+              <button class="calc-btn" data-val="6">6</button>
+              <button class="calc-btn calc-op" data-val="-">−</button>
+              <button class="calc-btn" data-val="1">1</button>
+              <button class="calc-btn" data-val="2">2</button>
+              <button class="calc-btn" data-val="3">3</button>
+              <button class="calc-btn calc-op" data-val="+">+</button>
+              <button class="calc-btn calc-zero" data-val="0">0</button>
+              <button class="calc-btn" data-val=".">.</button>
+              <button class="calc-btn calc-eq" data-val="=">=</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 颜色选择器 -->
+        <div class="tool-section">
+          <h4 class="tool-title">颜色选择器</h4>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-picker" value="#4aff4a">
+            <div class="color-info">
+              <div class="color-preview" id="color-preview"></div>
+              <div class="color-values">
+                <span id="color-hex">#4AFF4A</span>
+                <span id="color-rgb">rgb(74, 255, 74)</span>
+              </div>
+            </div>
+            <div class="color-palette" id="color-palette">
+              <div class="palette-color" style="background:#ff4444" data-color="#ff4444"></div>
+              <div class="palette-color" style="background:#ff8844" data-color="#ff8844"></div>
+              <div class="palette-color" style="background:#ffcc44" data-color="#ffcc44"></div>
+              <div class="palette-color" style="background:#44ff44" data-color="#44ff44"></div>
+              <div class="palette-color" style="background:#4444ff" data-color="#4444ff"></div>
+              <div class="palette-color" style="background:#ff44ff" data-color="#ff44ff"></div>
+              <div class="palette-color" style="background:#44ffff" data-color="#44ffff"></div>
+              <div class="palette-color" style="background:#ffffff" data-color="#ffffff"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 随机名言 -->
+        <div class="tool-section">
+          <h4 class="tool-title">随机名言</h4>
+          <div class="quote-box" id="quote-box">
+            <p class="quote-text" id="quote-text">点击按钮获取一条随机名言！</p>
+            <p class="quote-author" id="quote-author"></p>
+          </div>
+          <button id="new-quote-btn" style="margin-top: 10px;">换一条</button>
+        </div>
+
+        <!-- 密码生成器 -->
+        <div class="tool-section">
+          <h4 class="tool-title">密码生成器</h4>
+          <div class="password-gen">
+            <input type="text" id="password-output" readonly value="">
+            <div class="password-options">
+              <label>长度：<span id="pw-length-val">12</span></label>
+              <input type="range" id="pw-length" class="slider" min="6" max="32" value="12">
+              <div class="pw-checkboxes">
+                <label><input type="checkbox" id="pw-upper" checked> 大写字母</label>
+                <label><input type="checkbox" id="pw-lower" checked> 小写字母</label>
+                <label><input type="checkbox" id="pw-numbers" checked> 数字</label>
+                <label><input type="checkbox" id="pw-symbols"> 符号</label>
+              </div>
+            </div>
+            <button id="generate-pw">生成密码</button>
+            <button id="copy-pw">复制到剪贴板</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <script src="JSscript.js"></script>
+  <p class="smalltext">JS加载完毕</p>
 </body>
 </html>
