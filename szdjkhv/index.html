@@ -7,7 +7,7 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #000; color: #fff; height: 100vh; font-family: sans-serif; cursor: pointer; overflow: hidden; position: relative; }
-.content { display: none; flex-direction: column; align-items: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow-y: auto; overflow-x: hidden; }
+.content { display: none; flex-direction: column; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow-y: auto; overflow-x: hidden; }
 .content.show { display: flex; }
 video { width: 57%; flex-shrink: 0; }
 #lyrics { margin-top: 24px; font-size: 28px; text-align: center; min-height: 40px; max-width: 90vw; overflow-wrap: break-word; word-wrap: break-word; padding-bottom: 40px; }
@@ -27,6 +27,12 @@ video { width: 57%; flex-shrink: 0; }
 }
 #drawOverlay.fade-out { opacity: 0; pointer-events: none; }
 #drawOverlay.hidden { display: none; }
+
+@media (max-width: 768px) {
+  video { width: 100%; }
+  #lyrics { font-size: 20px; margin-top: 16px; }
+  #drawLabel { font-size: 18px; }
+}
 </style>
 </head>
 <body>
@@ -87,6 +93,8 @@ const lang = (navigator.language.startsWith('zh') ? 'zh' :
 function t(key) { return I18N[lang][key] || I18N.en[key]; }
 
 document.title = I18N[lang].pageTitle;
+const isMobile = window.innerWidth <= 768;
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('drawLabel').textContent = t('drawLabel');
   document.getElementById('title').textContent = t('title');
@@ -164,12 +172,12 @@ function centerAndScale(pts, targetW, targetH, cw, ch) {
     maxX = Math.max(maxX, p[0]); maxY = Math.max(maxY, p[1]);
   }
   const w = maxX - minX || 1, h = maxY - minY || 1;
-  const scale = Math.min(targetW / w, targetH / h) * 1.25;
+  const scale = Math.min(targetW / w, targetH / h) * (isMobile ? 0.6 : 1.25);
   const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
-  return pts.map(p => [(p[0] - cx) * scale + cw / 2 + 40, (p[1] - cy) * scale + ch / 2 - 60]);
+  return pts.map(p => [(p[0] - cx) * scale + cw / 2 + (isMobile ? 10 : 40), (p[1] - cy) * scale + ch / 2 + (isMobile ? -45 : -80)]);
 }
 
-function cubicIn(t) { return t * t * t; }
+function inOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
 
 function drawPath(pts, color, lw) {
   if (pts.length < 2) return;
@@ -191,7 +199,7 @@ function renderDraw() {
   if (animating) {
     const elapsed = performance.now() - animStart;
     const rawT = Math.min(elapsed / ANIM_DURATION, 1);
-    drawPath(lerp(morphFrom, morphTo, cubicIn(rawT)), '#4fc3f7', 3);
+    drawPath(lerp(morphFrom, morphTo, inOutSine(rawT)), '#4fc3f7', 3);
     if (elapsed >= ANIM_DURATION - 9) {
       animating = false;
       finalPoints = morphTo;
