@@ -2,34 +2,270 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Special Thing...</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; cursor: pointer; }
-.content { display: none; flex-direction: column; align-items: center; }
+body { background: #000; color: #fff; height: 100vh; font-family: sans-serif; cursor: pointer; overflow: hidden; position: relative; }
+.content { display: none; flex-direction: column; align-items: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow-y: auto; overflow-x: hidden; }
 .content.show { display: flex; }
-video { width: 75%; }
-#lyrics { margin-top: 24px; font-size: 28px; text-align: center; min-height: 40px; }
+video { width: 57%; flex-shrink: 0; }
+#lyrics { margin-top: 24px; font-size: 28px; text-align: center; min-height: 40px; max-width: 90vw; overflow-wrap: break-word; word-wrap: break-word; padding-bottom: 40px; }
 #lyrics span { opacity: 0.4; transition: opacity 0.15s; }
 #lyrics span.active { opacity: 1; color: #4fc3f7; }
+
+#drawOverlay {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #000; cursor: crosshair;
+  transition: none;
+}
+#drawOverlay canvas { display: block; }
+#drawLabel {
+  color: #fff; font-size: 24px; margin-bottom: 16px;
+ user-select: none; pointer-events: none;
+}
+#drawOverlay.fade-out { opacity: 0; pointer-events: none; }
+#drawOverlay.hidden { display: none; }
 </style>
 </head>
 <body>
+
+<div id="drawOverlay">
+  <div id="drawLabel">draw a long line</div>
+  <canvas id="drawCanvas" width="800" height="600"></canvas>
+</div>
+
 <div class="content" id="content">
-<h1 id="title" style="color:aliceblue">Got Rick Rolled lol</h1>
-<video id="video" src="RickAstley.mp4"></video>
-<div id="lyrics"></div>
+  <h1 id="title" style="color:aliceblue">Got Rick Rolled lol</h1>
+  <video id="video" src="RickAstley.mp4"></video>
+  <div id="lyrics"></div>
 </div>
 <div id="ending" style="display:none; flex-direction:column; align-items:center;">
-<h1 style="color:aliceblue; margin-bottom:20px;">This song is really nice, haha</h1>
-<button id="replay" style="padding:12px 32px; font-size:18px; cursor:pointer; background:#4fc3f7; border:none; border-radius:6px; color:#000;">replay</button>
+  <h1 style="color:aliceblue; margin-bottom:20px;">This song is really nice, haha</h1>
+  <button id="replay" style="padding:12px 32px; font-size:18px; cursor:pointer; background:#4fc3f7; border:none; border-radius:6px; color:#000;">replay</button>
 </div>
+
 <script>
+const I18N = {
+  en: {
+    drawLabel: 'draw a long line',
+    lineTooShort: 'line too short',
+    title: 'Got Rick Rolled lol',
+    endingText: 'This song is really nice, haha',
+    replay: 'replay',
+    pageTitle: 'Special Thing...'
+  },
+  zh: {
+    drawLabel: '画一条长线',
+    lineTooShort: '线太短了',
+    title: '你被Rick Roll了笑死',
+    endingText: '有一说一，还挺好听的，哈哈',
+    replay: '再来一次',
+    pageTitle: '特别惊喜...'
+  },
+  ja: {
+    drawLabel: '長い線を描いて',
+    lineTooShort: '線が短すぎます',
+    title: 'リックロールされたよww',
+    endingText: 'この曲いいよね、笑',
+    replay: 'もう一度',
+    pageTitle: '特別なこと...'
+  },
+  ko: {
+    drawLabel: '긴 선을 그려보세요',
+    lineTooShort: '선이 너무 짧아요',
+    title: '릭롤 당했네요 ㅋㅋㅋㅋㅋㅋㅋㅋ',
+    endingText: '이 노래 진짜 좋네요, haha',
+    replay: '다시 재생',
+    pageTitle: '특별한 것...'
+  }
+};
+const lang = (navigator.language.startsWith('zh') ? 'zh' :
+              navigator.language.startsWith('ja') ? 'ja' :
+              navigator.language.startsWith('ko') ? 'ko' : 'en');
+function t(key) { return I18N[lang][key] || I18N.en[key]; }
+
+document.title = I18N[lang].pageTitle;
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('drawLabel').textContent = t('drawLabel');
+  document.getElementById('title').textContent = t('title');
+  document.querySelector('#ending h1').textContent = t('endingText');
+  document.getElementById('replay').textContent = t('replay');
+});
+
+const TARGET_POINTS = [
+  [219,0],[225,7],[227,15],[227,23],[227,31],[225,39],[224,47],[223,55],
+  [222,63],[221,71],[217,79],[214,87],[211,95],[214,103],[214,111],[215,119],
+  [216,127],[216,135],[217,143],[217,151],[219,159],[221,167],[218,174],[210,179],
+  [202,186],[194,192],[186,199],[178,207],[170,215],[164,223],[158,231],[153,239],
+  [149,247],[148,255],[146,263],[146,271],[151,278],[159,281],[167,282],[175,283],
+  [183,284],[191,283],[199,283],[207,282],[215,280],[223,279],[231,277],[239,274],
+  [245,267],[252,262],[260,259],[268,255],[276,248],[284,242],[292,236],[300,231],
+  [308,228],[316,228],[324,231],[332,232],[340,230],[348,227],[356,224],[364,221],
+  [371,214],[371,206],[370,198],[370,190],[371,182],[371,174],[370,166],[369,158],
+  [368,150],[367,142],[366,134],[367,126],[368,118],[369,110],[369,102],[369,94],
+  [369,86],[368,78],[367,70],[366,62],[367,54],[369,46],[369,38],[371,30],
+  [370,22],[369,14],[369,6],[367,0],[359,0],[351,0],[343,0],[335,0],
+  [327,0],[319,0],[311,0],[303,0],[295,0],[287,0],[279,0],[271,0],
+  [263,0],[255,0],[247,0],[239,0],[231,0],[223,0]
+];
+const NUM = TARGET_POINTS.length;
+let ANIM_DURATION = 1200;
+
+const morphAudio = new Audio('mmoorrpphh.mp3');
+morphAudio.addEventListener('loadedmetadata', () => {
+  ANIM_DURATION = morphAudio.duration * 1000;
+});
+
+const overlay = document.getElementById('drawOverlay');
+const drawCanvas = document.getElementById('drawCanvas');
+const dctx = drawCanvas.getContext('2d');
+const drawLabel = document.getElementById('drawLabel');
+
+let drawing = false, rawPoints = [], morphFrom = null, morphTo = null;
+let animStart = null, animating = false, finalPoints = null, transitioned = false;
+
+function pathLength(pts) {
+  let len = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const dx = pts[i][0] - pts[i-1][0], dy = pts[i][1] - pts[i-1][1];
+    len += Math.sqrt(dx*dx + dy*dy);
+  }
+  return len;
+}
+
+function resample(pts, n) {
+  if (pts.length < 2) return pts;
+  const totalLen = pathLength(pts);
+  const segLen = totalLen / (n - 1);
+  const result = [pts[0].slice()];
+  let accumulated = 0, ptIdx = 0;
+  for (let i = 1; i < n; i++) {
+    const targetDist = segLen * i;
+    while (ptIdx < pts.length - 2) {
+      const dx = pts[ptIdx+1][0] - pts[ptIdx][0], dy = pts[ptIdx+1][1] - pts[ptIdx][1];
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (accumulated + d >= targetDist) {
+        result.push([pts[ptIdx][0] + dx * ((targetDist - accumulated) / d), pts[ptIdx][1] + dy * ((targetDist - accumulated) / d)]);
+        break;
+      }
+      accumulated += d; ptIdx++;
+    }
+    if (result.length <= i) result.push(pts[pts.length - 1].slice());
+  }
+  return result;
+}
+
+function centerAndScale(pts, targetW, targetH, cw, ch) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const p of pts) {
+    minX = Math.min(minX, p[0]); minY = Math.min(minY, p[1]);
+    maxX = Math.max(maxX, p[0]); maxY = Math.max(maxY, p[1]);
+  }
+  const w = maxX - minX || 1, h = maxY - minY || 1;
+  const scale = Math.min(targetW / w, targetH / h) * 1.25;
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+  return pts.map(p => [(p[0] - cx) * scale + cw / 2 + 40, (p[1] - cy) * scale + ch / 2 - 60]);
+}
+
+function cubicIn(t) { return t * t * t; }
+
+function drawPath(pts, color, lw) {
+  if (pts.length < 2) return;
+  dctx.beginPath();
+  dctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) dctx.lineTo(pts[i][0], pts[i][1]);
+  dctx.strokeStyle = color; dctx.lineWidth = lw;
+  dctx.lineCap = 'round'; dctx.lineJoin = 'round'; dctx.stroke();
+}
+
+function lerp(a, b, t) {
+  return a.map((p, i) => [p[0] + (b[i][0] - p[0]) * t, p[1] + (b[i][1] - p[1]) * t]);
+}
+
+function clearCanvas() { dctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); }
+
+function renderDraw() {
+  clearCanvas();
+  if (animating) {
+    const elapsed = performance.now() - animStart;
+    const rawT = Math.min(elapsed / ANIM_DURATION, 1);
+    drawPath(lerp(morphFrom, morphTo, cubicIn(rawT)), '#4fc3f7', 3);
+    if (elapsed >= ANIM_DURATION - 9) {
+      animating = false;
+      finalPoints = morphTo;
+      if (!transitioned) {
+        transitioned = true;
+        overlay.classList.add('hidden');
+        startVideo();
+      }
+      return;
+    }
+    requestAnimationFrame(renderDraw);
+  } else if (finalPoints) {
+    drawPath(finalPoints, '#4fc3f7', 3);
+  } else if (drawing) {
+    drawPath(rawPoints, '#aaa', 2);
+  }
+}
+
+function startMorph() {
+  if (rawPoints.length < 20) {
+    drawLabel.textContent = t('lineTooShort');
+    rawPoints = []; drawing = false; return;
+  }
+  drawLabel.textContent = '';
+  morphFrom = resample(rawPoints, NUM);
+  morphTo = centerAndScale(TARGET_POINTS, 300, 400, drawCanvas.width, drawCanvas.height);
+  animStart = performance.now();
+  animating = true;
+  morphAudio.currentTime = 0;
+  morphAudio.play();
+  video.currentTime = 1.551;
+  requestAnimationFrame(renderDraw);
+}
+
+function getPos(e, rect) { return [e.clientX - rect.left, e.clientY - rect.top]; }
+
+drawCanvas.addEventListener('mousedown', e => {
+  if (animating || transitioned) return;
+  drawing = true; finalPoints = null; rawPoints = [];
+  rawPoints.push(getPos(e, drawCanvas.getBoundingClientRect()));
+  drawLabel.textContent = '';
+});
+drawCanvas.addEventListener('mousemove', e => {
+  if (!drawing) return;
+  rawPoints.push(getPos(e, drawCanvas.getBoundingClientRect()));
+  renderDraw();
+});
+drawCanvas.addEventListener('mouseup', () => { if (drawing) { drawing = false; startMorph(); } });
+drawCanvas.addEventListener('mouseleave', () => { if (drawing) { drawing = false; startMorph(); } });
+
+drawCanvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  if (animating || transitioned) return;
+  drawing = true; finalPoints = null; rawPoints = [];
+  const t = e.touches[0];
+  rawPoints.push(getPos(t, drawCanvas.getBoundingClientRect()));
+  drawLabel.textContent = '';
+}, { passive: false });
+drawCanvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!drawing) return;
+  const t = e.touches[0];
+  rawPoints.push(getPos(t, drawCanvas.getBoundingClientRect()));
+  renderDraw();
+}, { passive: false });
+drawCanvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  if (drawing) { drawing = false; startMorph(); }
+});
+
+// === Video logic ===
 const video = document.getElementById('video');
 const lyricsEl = document.getElementById('lyrics');
-let words = [];
-let currentIdx = 0;
-let started = false;
+let words = [], currentIdx = 0, started = false;
 
 fetch('txt.lrc').then(r => r.text()).then(text => {
   const lines = text.split('\n');
@@ -43,42 +279,32 @@ fetch('txt.lrc').then(r => r.text()).then(text => {
       const w = m[3].trim();
       if (w) lineWords.push({ time: t, word: w });
     }
-    if (lineWords.length) {
-      lineWords[0].lineStart = true;
-      words.push(...lineWords);
-    }
+    if (lineWords.length) { lineWords[0].lineStart = true; words.push(...lineWords); }
   }
   words.sort((a, b) => a.time - b.time);
 });
 
-function start(enableSound = true) {
-  if (started && !enableSound) return;
+function startVideo() {
+  if (started) return;
   started = true;
   document.getElementById('content').classList.add('show');
   document.body.style.cursor = 'default';
-  if (enableSound) video.muted = false;
-  video.play().catch(() => {
-    video.muted = true;
-    video.play();
-  });
+  video.muted = false;
+  video.play().catch(() => { video.muted = true; video.play(); });
 }
-
-document.body.addEventListener('click', () => start(true));
 
 video.addEventListener('ended', () => {
   document.getElementById('content').classList.remove('show');
   document.getElementById('ending').style.display = 'flex';
 });
 
-document.getElementById('replay').addEventListener('click', (e) => {
+document.getElementById('replay').addEventListener('click', e => {
   e.stopPropagation();
   document.getElementById('ending').style.display = 'none';
   document.getElementById('title').style.display = 'none';
   document.getElementById('content').classList.add('show');
-  lyricsEl.innerHTML = '';
-  currentIdx = 0;
-  video.currentTime = 0;
-  video.play();
+  lyricsEl.innerHTML = ''; currentIdx = 0;
+  video.currentTime = 0; video.play();
 });
 
 video.addEventListener('timeupdate', () => {
@@ -95,13 +321,8 @@ video.addEventListener('timeupdate', () => {
 });
 
 video.addEventListener('seeking', () => {
-  const t = video.currentTime;
-  currentIdx = 0;
-  lyricsEl.innerHTML = '';
-  for (let i = 0; i < words.length; i++) {
-    if (words[i].time > t) break;
-    currentIdx = i + 1;
-  }
+  const t = video.currentTime; currentIdx = 0; lyricsEl.innerHTML = '';
+  for (let i = 0; i < words.length; i++) { if (words[i].time > t) break; currentIdx = i + 1; }
   for (let i = 0; i < currentIdx; i++) {
     if (words[i].lineStart && i > 0) lyricsEl.innerHTML = '';
     const span = document.createElement('span');
